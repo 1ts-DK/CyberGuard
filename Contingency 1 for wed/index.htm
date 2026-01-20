@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard | Security Auditor</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">CyberGuard</div>
+        <div class="top-links">
+            <a href="#">For More Info</a>
+            <a href="#">Help</a>
+        </div>
+    </header>
+
+    <div class="action-bar">
+        <div class="brand-pill">
+            <span id="card-label">Security Integrity Scan</span>
+        </div>
+        
+        <div class="toggle-container">
+            <button id="btn-pass" class="mode-btn active" onclick="setMode('pass')">Password</button>
+            <button id="btn-url" class="mode-btn" onclick="setMode('url')">URL Scanner</button>
+        </div>
+    </div>
+
+    <div class="auditor-container">
+        <div class="badge-container">
+            <span id="main-badge" class="status-badge safe">WAITING FOR INPUT</span>
+        </div>
+
+        <input type="text" id="input-field" placeholder="Enter password(eg. Student@2026)..." oninput="runAudit()" autocomplete="off">
+        
+        <div id="results-area" class="results-grid"></div>
+    </div>
+
+    <section class="info-cards">
+        
+        <div class="card">
+            <img src="brute force.webp" alt="Brute Force Attack" class="card-image">
+            <h3>Brute Force Reality</h3>
+            <p>An 8-character password can be cracked in 5 minutes. A 12-character password takes 200 years.</p>
+            <a href="#">Learn more →</a>
+        </div>
+
+        <div class="card">
+            <img src="security practices.jpg" alt="Security Lock" class="card-image">
+            <h3>Security Best Practices</h3>
+            <ul class="safe-list">
+                <li>Use at least 12 characters</li>
+                <li>Mix Symbols, Numbers & Caps</li>
+                <li>Check URLs for HTTPS</li>
+                <li>Avoid "login" or "verify" in links</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <img src="Phishing.jpg" alt="Phishing Hook" class="card-image">
+            <h3>Spotting Phishing</h3>
+            <p>Check the domain ending. Scammers love .xyz, .top, and .live because they are cheap to buy.</p>
+            <a href="#">See list →</a>
+        </div>
+
+    </section>
+
+    <script src="index.js"></script>
+</body>
+</html>

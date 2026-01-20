@@ -1,0 +1,212 @@
+/* RESET & BASIC SETUP */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* HIDE SCROLLBAR BUT KEEP SCROLLING */
+body {
+    background-color: #f6f6dc;
+    color: #1a1a1a;
+    padding: 20px 40px;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+    overflow-y: scroll;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* 1. HEADER */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 40px;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.top-links a {
+    text-decoration: none;
+    color: #1a1a1a;
+    margin-left: 20px;
+    font-weight: 500;
+}
+
+/* 2. THE BLACK ACTION BAR */
+.action-bar {
+    background-color: black;
+    color: white;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto 50px auto;
+    border-radius: 50px;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.brand-pill {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    font-weight: bold;
+}
+
+/* 3. BUTTONS */
+.toggle-container {
+    background-color: #1a1a1a;
+    border-radius: 30px;
+    padding: 4px;
+    display: flex;
+    gap: 5px;
+}
+
+.mode-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mode-btn.active {
+    background-color: white;
+    color: black;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 4. AUDITOR INPUT AREA */
+.auditor-container {
+    max-width: 700px;
+    margin: 0 auto 60px auto;
+    text-align: center;
+}
+
+.badge-container {
+    margin-bottom: 20px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.status-badge.safe { background: #d4edda; color: #155724; }
+.status-badge.warning { background: #fff3cd; color: #856404; }
+.status-badge.danger { background: #f8d7da; color: #721c24; }
+
+input[type="text"] {
+    width: 100%;
+    padding: 20px;
+    font-size: 24px;
+    border: none;
+    background: white;
+    border-radius: 15px;
+    outline: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+/* 5. RESULTS GRID */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.audit-box {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: left;
+    border-left: 5px solid #ccc;
+    animation: popIn 0.3s ease;
+}
+
+.audit-box.danger { border-left-color: #ff4d4d; background: #fff0f0; }
+.audit-box.warning { border-left-color: #ffcc00; background: #fffbe6; }
+
+.audit-box h3 { font-size: 14px; margin-bottom: 5px; text-transform: uppercase; }
+.audit-box p { font-size: 13px; color: #555; }
+
+@keyframes popIn {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 6. THREE CARDS SECTION */
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 300px;
+    
+    /* ADDED FOR HOVER EFFECT */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default; /* Optional: keeps cursor normal */
+}
+
+/* NEW: THE HOVER ACTION */
+.card:hover {
+    transform: translateY(-7px); /* Moves the card UP by 7 pixels */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1); /* Makes the shadow softer and deeper */
+}
+
+.card-image {
+    width: 100%;
+    height: 140px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+
+.card h3 { margin-bottom: 10px; font-size: 18px; }
+.card p { font-size: 14px; color: #666; line-height: 1.4; margin-bottom: 15px; }
+.card a { text-decoration: none; color: black; font-weight: bold; font-size: 14px; margin-top: auto; }
+
+.safe-list { list-style: none; padding-left: 0; }
+.safe-list li {
+    font-size: 13px; color: #555; margin-bottom: 8px; position: relative; padding-left: 20px;
+}
+.safe-list li::before {
+    content: "✔"; color: green; position: absolute; left: 0; font-weight: bold;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .info-cards { grid-template-columns: 1fr; }
+    .action-bar { flex-direction: column; gap: 10px; border-radius: 20px; }
+    header { flex-direction: column; gap: 10px; }
+}
