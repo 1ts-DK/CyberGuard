@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Creator" description="Daniel Karanja (DK)">
+    <title>CyberGuard | Help Center</title>
+    <link rel="stylesheet" href="/reports page/reports.css"> 
+    <link rel="stylesheet" href="/help page/help.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="light-theme">
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/main page/index.htm" style="text-decoration: none; color: inherit;">
+                <span class="brand">CYBERGUARD</span>
+            </a>
+            <div class="nav-actions">
+                <div class="nav-links desktop-only">
+                    <a href="/main page/index.htm"><b>←</b> Back to Scanner</a>
+                </div>
+                <button id="themeToggle" class="icon-btn" title="Toggle Theme">
+                    <i data-lucide="moon" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="help-wrapper">
+        
+        <header class="help-hero">
+            <h1>How can we protect you?</h1>
+            <p>Your guide to navigating the CyberGuard ecosystem and staying safe.</p>
+        </header>
+
+        <section class="guide-section">
+            <h2 class="section-heading">Platform Guide</h2>
+            
+            <div class="guide-card">
+                <div class="guide-content">
+                    <span class="step-badge">STEP 01</span>
+                    <h3>Using the Scanner</h3>
+                    <p>On the homepage, simply paste any URL, IP address, or File Hash into the central search bar. Our AI engine analyzes it against 50+ threat databases instantly.</p>
+                </div>
+                <div class="guide-visual">
+                    <img src="/help page/guide1.png" alt="Screenshot of the Scanner Page" class="screenshot-img">
+                </div>
+                </div>
+            </div>
+
+            <div class="guide-card reversed">
+                <div class="guide-content">
+                    <span class="step-badge">STEP 02</span>
+                    <h3>Reading Intelligence</h3>
+                    <p>Visit the "Latest Intel" page to view real-time attack statistics. Use the search bar to find deep-dive reports on specific threats like Ransomware or SQL Injection.</p>
+                </div>
+                <div class="guide-visual">
+                    <img src="/help page/guide2.png" alt="Screenshot of the Reports Page" class="screenshot-img">
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quiz-section">
+            <h2 class="section-heading">Mini-Game: Is it a Scam?</h2>
+            <div class="quiz-container" id="quizContainer">
+                
+                <div id="quizQuestionBox">
+                    <div class="quiz-progress">Question <span id="qCurrent">1</span> / <span id="qTotal">3</span></div>
+                    <h3 id="qText">Loading...</h3>
+                    <div class="quiz-options">
+                        <button class="quiz-btn safe" onclick="answerQuiz(true)">Looks Safe 👍</button>
+                        <button class="quiz-btn danger" onclick="answerQuiz(false)">It's a Scam! 🚩</button>
+                    </div>
+                </div>
+
+                <div id="quizResultBox" class="hidden">
+                    <i data-lucide="award" class="result-icon"></i>
+                    <h3 id="resultTitle">Good Job!</h3>
+                    <p id="resultDesc">You spotted the phishing attempts.</p>
+                    <button class="quiz-btn reload" onclick="restartQuiz()">Try Again</button>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <div class="chatbot-wrapper">
+        
+        <div class="chat-window hidden" id="chatWindow">
+            <div class="chat-header">
+                <div class="bot-info">
+                    <div class="status-dot"></div>
+                    <span>GuardBot AI</span>
+                </div>
+                <button class="close-chat" onclick="toggleChat()"><i data-lucide="x"></i></button>
+            </div>
+            
+            <div class="chat-body" id="chatBody">
+                <div class="message bot">
+                    Hello! I'm GuardBot. I can help you navigate the site or explain security terms. How can I help?
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off">
+                <button onclick="sendMessage()"><i data-lucide="send"></i></button>
+            </div>
+        </div>
+
+        <button class="chat-trigger" onclick="toggleChat()">
+            <i data-lucide="message-circle"></i>
+        </button>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <span class="footer-brand">CYBERGUARD</span>
+            <p>Project By: Daniel Karanja (DK)</p>
+        </div>
+    </footer>
+
+    <script src="/help page/help.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
