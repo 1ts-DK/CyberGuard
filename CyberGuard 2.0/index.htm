@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard | Security Auditor</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="light-theme">
+    <nav class="navbar">
+        <div class="nav-container">
+            <span class="brand">CYBERGUARD</span>
+            <div class="nav-actions">
+                <div class="nav-links">
+                    <a href="#"><i data-lucide="info"></i> For More Info</a>
+                    <a href="#"><i data-lucide="help-circle"></i> Need Help?</a>
+                </div>
+                <button id="themeToggle" class="icon-btn" title="Toggle Theme">
+                    <i data-lucide="moon" id="themeIcon"></i>
+                </button>
+                <div class="dropdown">
+                    <button class="dropbtn" id="langBtn">
+                        <i data-lucide="globe"></i> <span id="currentLangText">English</span> <i data-lucide="chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content" id="langMenu">
+                        <button onclick="changeLang('en')">English</button>
+                        <button onclick="changeLang('es')">Spanish</button>
+                        <button onclick="changeLang('fr')">French</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <h1 id="heroTitle">CyberGuard Security Auditor</h1>
+            <p id="heroSub" class="subtitle">A Cyber Secutity tool for modern security integrity scans and phishing threat detections</p>
+        </header>
+
+        <section class="scanner-section">
+            <div class="mode-tabs">
+                <button class="tab active" id="passModeBtn" onclick="setMode('pass')">
+                    <i data-lucide="lock"></i> <span id="modePassText">Password</span>
+                </button>
+                <button class="tab" id="urlModeBtn" onclick="setMode('url')">
+                    <i data-lucide="globe"></i> <span id="modeUrlText">URL Scanner</span>
+                </button>
+            </div>
+
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <div id="badge" class="badge idle">WAITING FOR INPUT</div>
+                    <input type="text" id="mainInput" placeholder="Enter password (eg. Student@2026)..." autocomplete="off">
+                </div>
+                
+                <button id="generateBtn" class="generate-btn">
+                    <i data-lucide="zap"></i> <span id="genBtnText">Secure Generate</span>
+                </button>
+            </div>
+
+            <div id="resultsGrid" class="results-grid"></div>
+            <div id="safeMessage" class="safe-message hidden">
+                <div class="check-icon"><i data-lucide="shield-check"></i></div>
+                <h3 id="statusSafeText">SECURE</h3>
+                <p id="successMsgText">No immediate threats detected.</p>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="stat-item">
+                <h2>Too Many</h2>
+                <p id="stat1">SCANS TODAY</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <h2>A Lot</h2>
+                <p id="stat2">THREATS BLOCKED</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <h2>99.9%</h2>
+                <p id="stat3">ACCURACY RATE</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <h2>100%</h2>
+                <p id="stat4">NETWORK UPTIME</p>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <div class="section-header">
+                <div class="header-text">
+                    <h2 id="infoTitle">SECURITY INTELLIGENCE</h2>
+                    <p id="infoSub">Stay ahead of evolving cyber threats with our research.</p>
+                </div>
+                <a href="#" class="view-all-link" id="viewAllBtn">View All Reports</a>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="card-image">
+                        <img src="brute force.webp" alt="Code">
+                    </div>
+                    <div class="card-content">
+                        <h3 id="card1Title">Brute Force Reality</h3>
+                        <p id="card1Desc">An 8-character password can be cracked in 5 minutes. A 12-character password takes 200 years.</p>
+                        <a href="#" class="card-link"><span id="link1">Learn more</span> <i data-lucide="arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-image">
+                        <img src="security practices.jpg" alt="Lock">
+                    </div>
+                    <div class="card-content">
+                        <h3 id="card2Title">Security Best Practices</h3>
+                        <ul class="checklist">
+                            <li><i data-lucide="check-circle-2"></i> Use at least 12 characters</li>
+                            <li><i data-lucide="check-circle-2"></i> Mix Symbols, Numbers & Caps</li>
+                            <li><i data-lucide="check-circle-2"></i> Check URLs for HTTPS</li>
+                        </ul>
+                        <a href="#" class="card-link"><span id="link2">Security Checklist</span> <i data-lucide="arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-image">
+                        <img src="Phishing.jpg" alt="Hacker">
+                    </div>
+                    <div class="card-content">
+                        <h3 id="card3Title">Spotting Phishing</h3>
+                        <p id="card3Desc">Check the domain ending. Scammers love .xyz, .top, and .live because they are cheap to buy.</p>
+                        <a href="#" class="card-link"><span id="link3">See list</span> <i data-lucide="arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Project done by URS TRULY DK, Joyce, Zippy, Karanja & Nissi</p>
+    </footer>
+
+    <script src="index.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
