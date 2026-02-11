@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="Creator" description="Daniel Karanja (DK)">
     <title>CyberGuard | Security Auditor</title>
     <link rel="stylesheet" href="/main page/index.css">
@@ -12,23 +12,66 @@
     
     <nav class="navbar">
         <div class="nav-container">
-            <span class="brand">CYBERGUARD</span>
+            <a href="/main page/index.htm" style="text-decoration: none; color: inherit;">
+                <span class="brand">CYBERGUARD</span>
+            </a>
             <div class="nav-actions">
                 <div class="nav-links desktop-only">
-                    <a href="/more info/info.htm"><i data-lucide="info"></i> For More Info</a>
-                    <a href="/help page/help.htm"><i data-lucide="help-circle"></i> Need Help?</a>
+                    <a href="/tool page/tools.htm"><i data-lucide="wrench"></i> Tools</a>
+                    <a href="/developers page/api.htm"><i data-lucide="code-2"></i> API</a>
+                    <a href="/more info/info.htm" id="navInfo"><i data-lucide="info"></i> Info</a>
+                    <a href="/help page/help.htm" id="navHelp"><i data-lucide="help-circle"></i> Help</a>
                 </div>
+                
                 <button id="themeToggle" class="icon-btn" title="Toggle Theme">
                     <i data-lucide="moon" id="themeIcon"></i>
                 </button>
-                <div class="dropdown">
-                    <button class="dropbtn" id="langBtn">
-                        <b>🌐</b> <span id="currentLangText">English</span> <b>⮟</b>
-                    </button>
-                    <div class="dropdown-content" id="langMenu">
-                        <button onclick="changeLang('en')">English</button>
-                        <button onclick="changeLang('es')">Spanish</button>
-                        <button onclick="changeLang('fr')">French</button>
+
+                <div id="authContainer">
+                    <button id="signInBtn" class="action-btn" onclick="openAuthModal()">Sign In</button>
+                    
+                    <div id="userProfile" class="user-profile-container hidden">
+                        <div class="welcome-text">
+                            <span class="sub-text">Welcome,</span>
+                            <span id="navUserName" class="user-name-display">User</span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <button class="profile-btn" id="profileBtn">
+                                <img id="profileImg" src="/main page/Wheel.jpg" alt="Profile">
+                            </button>
+                            <div class="profile-menu" id="profileMenu">
+                                <div class="profile-dropdown" id="profileMenu">
+                                    <div class="profile-header" onclick="window.location.href='/profile page/profile.htm'" title="View Dashboard">
+                                        <div class="profile-pic-medium">
+                                            <img src="/main page/Wheel.jpg" alt="User" id="menuProfilePic" onerror="this.src='https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff'">
+                                        </div>
+                                        <div class="header-info">
+                                            <span class="user-name" id="menuUserName">Loading...</span>
+                                            <span class="user-email" id="menuUserEmail">please wait...</span>
+                                            <span class="user-tier-badge" id="menuUserTier">STANDARD</span>
+                                        </div>
+                                        <i data-lucide="chevron-right" class="arrow-icon"></i>
+                                    </div>
+                                </div>
+
+                                <div class="menu-items">
+                                    <button id="upgradeBtn" class="menu-btn premium" onclick="openSubModal()">
+                                        <i data-lucide="crown"></i> Upgrade to Elite
+                                    </button>
+                                    <button class="menu-btn"><i data-lucide="settings"></i> Settings</button>
+                                </div>
+                                <div class="lang-options">
+                                    <button class="lang-opt" onclick="changeLang('en')">EN</button>
+                                    <button class="lang-opt" onclick="changeLang('es')">ES</button>
+                                    <button class="lang-opt" onclick="changeLang('fr')">FR</button>
+                                </div>
+                                <div class="menu-items">
+                                    <button class="menu-btn" onclick="logout()" style="color: #ff4d4d;">
+                                        <i data-lucide="log-out"></i> Sign Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -53,58 +96,57 @@
 
             <div class="input-container">
                 <div id="badge" class="badge idle">WAITING FOR INPUT</div>
-                
                 <div class="input-wrapper">
                     <input type="text" id="mainInput" placeholder="Enter password (eg. Student@2026)..." autocomplete="off">
                 </div>
-                
                 <div id="safeMessage" class="safe-message hidden">
                     <div class="check-icon"><i data-lucide="shield-check"></i></div>
                     <h3 id="statusSafeText">SECURE</h3>
                     <p id="successMsgText">No immediate threats detected.</p>
                 </div>
-                
                 <button id="generateBtn" class="generate-btn">
                     <i data-lucide="zap"></i> <span id="genBtnText">Secure Generate</span>
                 </button>
             </div>
-
             <div id="resultsGrid" class="results-grid"></div>
         </section>
 
+        <section id="historySection" class="info-section hidden">
+            <div class="section-header">
+                <div class="header-text">
+                    <h2 id="historyTitle">Recent Scans</h2>
+                    <p id="historySubText">Your secure audit history.</p>
+                </div>
+                <button onclick="clearHistory()" class="view-all-link" style="background:none; border:none; cursor:pointer;">Clear History</button>
+            </div>
+            <div class="history-table-container">
+                <table class="history-table">
+                    <thead>
+                        <tr><th>Type</th><th>Value</th><th>Result</th><th>Time</th></tr>
+                    </thead>
+                    <tbody id="historyTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
         <section class="stats-section">
-            <div class="stat-item">
-                <h2>Too Many</h2>
-                <p id="stat1">SCANS TODAY</p>
-            </div>
-            <div class="stat-item">
-                <h2>A Lot</h2>
-                <p id="stat2">THREATS BLOCKED</p>
-            </div>
-            <div class="stat-item">
-                <h2>99.9%</h2>
-                <p id="stat3">ACCURACY RATE</p>
-            </div>
-            <div class="stat-item">
-                <h2>100%</h2>
-                <p id="stat4">NETWORK UPTIME</p>
-            </div>
+            <div class="stat-item"><h2>Too Many</h2><p id="stat1">SCANS TODAY</p></div>
+            <div class="stat-item"><h2>A Lot</h2><p id="stat2">THREATS BLOCKED</p></div>
+            <div class="stat-item"><h2>99.9%</h2><p id="stat3">ACCURACY RATE</p></div>
+            <div class="stat-item"><h2>100%</h2><p id="stat4">NETWORK UPTIME</p></div>
         </section>
 
         <section class="info-section">
             <div class="section-header">
                 <div class="header-text">
                     <h2 id="infoTitle">SECURITY INTELLIGENCE</h2>
-                    <p id="infoSub">Stay ahead of evolving cyber threats with our research.</p>
+                    <p id="infoSub">Stay ahead of evolving cyber threats.</p>
                 </div>
                 <a href="/reports page/reports.htm" class="view-all-link" id="viewAllBtn">View All Reports</a>
             </div>
-
             <div class="info-grid">
                 <div class="info-card">
-                    <div class="card-image">
-                        <img src="brute force.webp" alt="Code">
-                    </div>
+                    <div class="card-image"><img src="brute force.webp" alt="Code"></div>
                     <div class="card-content">
                         <h3 id="card1Title">Brute Force Reality</h3>
                         <p id="card1Desc">An 8-character password can be cracked in 5 minutes. A 12-character password takes 200 years.</p>
@@ -113,7 +155,6 @@
                         </a>
                     </div>
                 </div>
-
                 <div class="info-card">
                     <div class="card-image">
                         <img src="security practices.jpg" alt="Lock">
@@ -130,11 +171,8 @@
                         </a>
                     </div>
                 </div>
-
                 <div class="info-card">
-                    <div class="card-image">
-                        <img src="Phishing.jpg" alt="Hacker">
-                    </div>
+                    <div class="card-image"><img src="Phishing.jpg" alt="Hacker"></div>
                     <div class="card-content">
                         <h3 id="card3Title">Spotting Phishing</h3>
                         <p id="card3Desc">Check the domain ending. Scammers love .xyz, .top, and .live because they are cheap to buy.</p>
@@ -150,29 +188,63 @@
     <footer>
         <div class="footer-container">
             <span class="footer-brand">CYBERGUARD</span>
-            <p>Project By: Daniel Karanja (DK)</p>
+            <p id="footerText">Project By: Daniel Karanja (DK)</p>
         </div>
     </footer>
 
     <div id="modalOverlay" class="modal-overlay hidden" onclick="closeModal()">
         <div class="modal-card" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal()">
-                <i data-lucide="x"></i>
-            </button>
-            <div class="modal-image-wrapper">
-                <img id="modalImg" src="" alt="Detail">
-            </div>
+            <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+            <div class="modal-image-wrapper"><img id="modalImg" src="" alt="Detail Image"></div>
+            <div class="modal-content-text"><h2 id="modalTitle"></h2><div id="modalBody"></div></div>
+        </div>
+    </div>
+
+    <div id="subModalOverlay" class="modal-overlay hidden" onclick="closeSubModal()">
+        <div class="modal-card sub-modal" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeSubModal()"><i data-lucide="x"></i></button>
             <div class="modal-content-text">
-                <h2 id="modalTitle">Title Here</h2>
-                <div id="modalBody">
+                <h2>Upgrade Your Armor</h2>
+                <div class="sub-grid">
+                    <div class="sub-card"><h3>Standard</h3><p>Free Protection</p><button class="sub-btn" onclick="confirmUpgrade('Standard Guard')">Select</button></div>
+                    <div class="sub-card advanced"><h3>Advanced</h3><p>Enhanced Security</p><button class="sub-btn primary" onclick="confirmUpgrade('Advanced Guard')">Upgrade</button></div>
+                    <div class="sub-card elite"><h3>Elite</h3><p>Full Protection</p><button class="sub-btn primary" onclick="confirmUpgrade('Elite Guard')">Go Elite</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="authModal" class="modal-overlay hidden">
+        <div class="modal-card auth-card" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeAuthModal()"><i data-lucide="x"></i></button>
+            <div id="authStep1">
+                <div class="auth-icon"><i data-lucide="fingerprint"></i></div>
+                <h2>Biometric Armor</h2>
+                <input type="text" id="authEmail" placeholder="Enter your email..." class="auth-input">
+                <button class="action-btn full-width" onclick="startAuthProcess()">Continue</button>
+            </div>
+            <div id="authStep2" class="hidden"><div class="scanner-ring"></div><h3>Scanning Biometrics...</h3></div>
+            <div id="authStep3" class="hidden">
+                <div class="breach-alert-card">
+                    <div class="breach-header">BREACH DETECTED</div>
+                    <div class="breach-body">
+                        <h3>Critical Leak Found!</h3>
+                        <p>Your email was found in 3 known database leaks. Secure your identity now.</p>
                     </div>
+                </div>
+                <button class="action-btn full-width" onclick="goToPlanSelection()">Protect Me</button>
+            </div>
+            <div id="authStep4" class="hidden">
+                <h2>Choose a Plan</h2>
+                <div class="plan-selector">
+                    <div class="plan-option" onclick="selectPlan('Standard Guard')">Standard (Free)</div>
+                    <div class="plan-option" onclick="selectPlan('Advanced Guard')">Advanced (KSH 600)</div>
+                    <div class="plan-option recommended" onclick="selectPlan('Elite Guard')">Elite (KSH 1200)</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="/main page/index.js"></script>
-    <script>
-        lucide.createIcons();
-    </script>
 </body>
 </html>

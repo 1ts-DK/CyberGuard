@@ -783,3 +783,126 @@ footer p {
     .step-connector { transform: rotate(90deg); margin: 1rem 0; }
     .search-box { width: 100%; }
 }
+
+/* --- RESPONSIVE REPORTS --- */
+@media (max-width: 768px) {
+    /* Adjust Hero */
+    .hero { padding-top: 2rem; }
+    
+    /* Stack the Attack Steps */
+    .steps-container { 
+        flex-direction: column; 
+        gap: 1rem; 
+    }
+    
+    /* Rotate Arrows 90 degrees to point down */
+    .step-connector h1 { transform: rotate(90deg); margin: 0.5rem 0; }
+    
+    /* Charts */
+    .stats-dashboard { 
+        grid-template-columns: 1fr; /* Stack charts */
+    }
+    
+    /* Ticker */
+    .ticker-heading { font-size: 0.7rem; padding: 0 0.5rem; }
+    .ticker-item { font-size: 0.8rem; }
+}
+
+/* ============================= */
+/* GLOBAL THREAT MAP SECTION     */
+/* ============================= */
+
+.map-section {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background: #0f172a;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    margin: 3rem 0;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.world-map-bg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.25;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+    background-size: cover;
+    background-position: center;
+    filter: invert(1);
+}
+
+.threat-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulseThreat 1.5s ease-out forwards;
+    box-shadow: 0 0 10px #ef4444;
+}
+
+@keyframes pulseThreat {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+.map-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.7);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: #22c55e;
+    font-family: monospace;
+    border: 1px solid #22c55e;
+}
+
+/* ============================= */
+/* SERVICE UPTIME MONITOR        */
+/* ============================= */
+
+.uptime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.uptime-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.status-badge {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    border-radius: 50%;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
+}

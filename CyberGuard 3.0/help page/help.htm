@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="Creator" description="Daniel Karanja (DK)">
     <title>CyberGuard | Help Center</title>
-    <link rel="stylesheet" href="/reports page/reports.css"> 
+    <link rel="stylesheet" href="/main page/index.css"> 
     <link rel="stylesheet" href="/help page/help.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -18,11 +18,63 @@
             </a>
             <div class="nav-actions">
                 <div class="nav-links desktop-only">
-                    <a href="/main page/index.htm"><b>←</b> Back to Scanner</a>
+                    <a href="/tool page/tools.htm"><i data-lucide="wrench"></i> Tools</a>
+                    <a href="/developers page/api.htm"><i data-lucide="code-2"></i> API</a>
+                    <a href="/more info/info.htm" id="navInfo"><i data-lucide="info"></i> Info</a>
+                    <a href="/help page/help.htm" id="navHelp"><i data-lucide="help-circle"></i> Help</a>
                 </div>
+                
                 <button id="themeToggle" class="icon-btn" title="Toggle Theme">
                     <i data-lucide="moon" id="themeIcon"></i>
                 </button>
+
+                <div id="authContainer">
+                    <button id="signInBtn" class="action-btn" onclick="openAuthModal()">Sign In</button>
+                    
+                    <div id="userProfile" class="user-profile-container hidden">
+                        <div class="welcome-text">
+                            <span class="sub-text">Welcome,</span>
+                            <span id="navUserName" class="user-name-display">User</span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <button class="profile-btn" id="profileBtn">
+                                <img id="profileImg" src="/main page/Wheel.jpg" alt="Profile">
+                            </button>
+                            <div class="profile-menu" id="profileMenu">
+                                <div class="profile-dropdown" id="profileMenu">
+                                    <div class="profile-header" onclick="window.location.href='/profile page/profile.htm'" title="View Dashboard">
+                                        <div class="profile-pic-medium">
+                                            <img src="/main page/Wheel.jpg" alt="User" id="menuProfilePic" onerror="this.src='https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff'">
+                                        </div>
+                                        <div class="header-info">
+                                            <span class="user-name" id="menuUserName">Loading...</span>
+                                            <span class="user-email" id="menuUserEmail">please wait...</span>
+                                            <span class="user-tier-badge" id="menuUserTier">STANDARD</span>
+                                        </div>
+                                        <i data-lucide="chevron-right" class="arrow-icon"></i>
+                                    </div>
+                                </div>
+
+                                <div class="menu-items">
+                                    <button id="upgradeBtn" class="menu-btn premium" onclick="openSubModal()">
+                                        <i data-lucide="crown"></i> Upgrade to Elite
+                                    </button>
+                                    <button class="menu-btn"><i data-lucide="settings"></i> Settings</button>
+                                </div>
+                                <div class="lang-options">
+                                    <button class="lang-opt" onclick="changeLang('en')">EN</button>
+                                    <button class="lang-opt" onclick="changeLang('es')">ES</button>
+                                    <button class="lang-opt" onclick="changeLang('fr')">FR</button>
+                                </div>
+                                <div class="menu-items">
+                                    <button class="menu-btn" onclick="logout()" style="color: #ff4d4d;">
+                                        <i data-lucide="log-out"></i> Sign Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>

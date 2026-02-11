@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard | API Documentation</title>
+    <link rel="stylesheet" href="/main page/index.css">
+    <link rel="stylesheet" href="/developers page/api.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="light-theme">
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/main page/index.htm" style="text-decoration: none; color: inherit;">
+                <span class="brand">CYBERGUARD</span>
+            </a>
+            <div class="nav-actions">
+                <div class="nav-links desktop-only">
+                    <a href="/tool page/tools.htm"><i data-lucide="wrench"></i> Tools</a>
+                    <a href="/developers page/api.htm"><i data-lucide="code-2"></i> API</a>
+                    <a href="/more info/info.htm" id="navInfo"><i data-lucide="info"></i> Info</a>
+                    <a href="/help page/help.htm" id="navHelp"><i data-lucide="help-circle"></i> Help</a>
+                </div>
+                
+                <button id="themeToggle" class="icon-btn" title="Toggle Theme">
+                    <i data-lucide="moon" id="themeIcon"></i>
+                </button>
+
+                <div id="authContainer">
+                    <button id="signInBtn" class="action-btn" onclick="openAuthModal()">Sign In</button>
+                    
+                    <div id="userProfile" class="user-profile-container hidden">
+                        <div class="welcome-text">
+                            <span class="sub-text">Welcome,</span>
+                            <span id="navUserName" class="user-name-display">User</span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <button class="profile-btn" id="profileBtn">
+                                <img id="profileImg" src="/main page/Wheel.jpg" alt="Profile">
+                            </button>
+                            <div class="profile-menu" id="profileMenu">
+                                <div class="profile-dropdown" id="profileMenu">
+                                    <div class="profile-header" onclick="window.location.href='/profile page/profile.htm'" title="View Dashboard">
+                                        <div class="profile-pic-medium">
+                                            <img src="/main page/Wheel.jpg" alt="User" id="menuProfilePic" onerror="this.src='https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff'">
+                                        </div>
+                                        <div class="header-info">
+                                            <span class="user-name" id="menuUserName">Loading...</span>
+                                            <span class="user-email" id="menuUserEmail">please wait...</span>
+                                            <span class="user-tier-badge" id="menuUserTier">STANDARD</span>
+                                        </div>
+                                        <i data-lucide="chevron-right" class="arrow-icon"></i>
+                                    </div>
+                                </div>
+
+                                <div class="menu-items">
+                                    <button id="upgradeBtn" class="menu-btn premium" onclick="openSubModal()">
+                                        <i data-lucide="crown"></i> Upgrade to Elite
+                                    </button>
+                                    <button class="menu-btn"><i data-lucide="settings"></i> Settings</button>
+                                </div>
+                                <div class="lang-options">
+                                    <button class="lang-opt" onclick="changeLang('en')">EN</button>
+                                    <button class="lang-opt" onclick="changeLang('es')">ES</button>
+                                    <button class="lang-opt" onclick="changeLang('fr')">FR</button>
+                                </div>
+                                <div class="menu-items">
+                                    <button class="menu-btn" onclick="logout()" style="color: #ff4d4d;">
+                                        <i data-lucide="log-out"></i> Sign Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="api-container">
+        <aside class="api-sidebar">
+            <div class="search-box">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search docs...">
+                <span class="shortcut-badge">Ctrl K</span>
+            </div>
+
+            <div class="api-nav-group">
+                <span class="api-nav-title">Getting Started</span>
+                <a href="#intro" class="api-nav-link active">Introduction</a>
+                <a href="#auth" class="api-nav-link">Authentication</a>
+                <a href="#rate-limits" class="api-nav-link">Rate Limits</a>
+            </div>
+
+            <div class="api-nav-group">
+                <span class="api-nav-title">Endpoints</span>
+                <a href="#scan-url" class="api-nav-link">Scan URL</a>
+                <a href="#check-pass" class="api-nav-link">Check Password</a>
+                <a href="#file-hash" class="api-nav-link">Scan File Hash</a>
+            </div>
+
+            <div class="api-nav-group">
+                <span class="api-nav-title">Resources</span>
+                <a href="#sdks" class="api-nav-link">SDKs & Libraries</a>
+                <a href="#status-codes" class="api-nav-link">Status Codes</a>
+                <a href="#pricing" class="api-nav-link">Pricing</a>
+            </div>
+        </aside>
+
+        <main class="api-content">
+            
+            <section id="intro" class="api-header">
+                <h1>CyberGuard API</h1>
+                <p>Integrate our industry-leading threat detection engine directly into your applications. Programmatically scan URLs for phishing, analyze password entropy, and verify file hashes with sub-100ms latency.</p>
+            </section>
+
+            <section id="auth" style="margin-top: 4rem;">
+                <h2>Authentication</h2>
+                <p>All API requests require an API Key passed in the header. You can generate a key from your user dashboard.</p>
+                <div class="code-wrapper">
+                    <pre>Authorization: Bearer 676767Myapikey</pre>
+                </div>
+            </section>
+
+            <section id="rate-limits" style="margin-top: 4rem;">
+                <h2>Rate Limits</h2>
+                <p>To ensure fair usage, we implement rate limiting. Check the response headers.</p>
+                <table class="api-table">
+                    <thead><tr><th>Header</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>X-RateLimit-Limit</code></td><td>Requests allowed per hour.</td></tr>
+                        <tr><td><code>X-RateLimit-Remaining</code></td><td>Requests remaining in current window.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="scan-url" style="margin-top: 4rem;">
+                <h2>Scan URL</h2>
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span> 
+                        <span class="url-path">/v1/scan/url</span>
+                    </div>
+                    <p>Analyzes a URL for phishing, malware, and reputation against 50+ threat databases.</p>
+                    
+                    <h4>Request Example (cURL)</h4>
+                    <div class="code-wrapper">
+<pre>curl -X POST https://api.cyberguard.com/v1/scan/url \
+  -H "Authorization: Bearer {key}" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "http://suspicious-site.xyz"}'</pre>
+                    </div>
+
+                    <div class="console-trigger" onclick="toggleConsole('console-url')">
+                        <i data-lucide="terminal"></i> Try It Now
+                    </div>
+                    <div id="console-url" class="console-box">
+                        <label style="display:block; margin-bottom:0.5rem; font-weight:700; font-size:0.8rem;">Target URL</label>
+                        <input type="text" id="try-url-input" class="console-input" value="http://suspicious-site.xyz">
+                        <button class="run-btn" onclick="runUrlSimulation()">
+                            <i data-lucide="play" style="width: 16px;"></i> Send Request
+                        </button>
+                        <div style="margin-top: 1rem;">
+                            <label style="display:block; margin-bottom:0.5rem; font-weight:700; font-size:0.8rem;">Response</label>
+                            <pre id="try-url-output" style="padding: 1rem; font-size: 0.8rem; background: #111;">Waiting for request...</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="check-pass" style="margin-top: 4rem;">
+                <h2>Check Password</h2>
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span> 
+                        <span class="url-path">/v1/scan/password</span>
+                    </div>
+                    <p>Calculates the mathematical entropy of a password string.</p>
+                    
+                    <div class="code-wrapper">
+<pre>curl -X POST https://api.cyberguard.com/v1/scan/password \
+  -H "Authorization: Bearer {key}" \
+  -d '{"password": "correct-horse-battery"}'</pre>
+                    </div>
+
+                    <div class="console-trigger" onclick="toggleConsole('console-pass')">
+                        <i data-lucide="terminal"></i> Try It Now
+                    </div>
+                    <div id="console-pass" class="console-box">
+                        <label style="display:block; margin-bottom:0.5rem; font-weight:700; font-size:0.8rem;">Password</label>
+                        <input type="text" id="try-pass-input" class="console-input" value="MySecretPass123!">
+                        <button class="run-btn" onclick="runPassSimulation()">
+                            <i data-lucide="play" style="width: 16px;"></i> Send Request
+                        </button>
+                        <div style="margin-top: 1rem;">
+                            <label style="display:block; margin-bottom:0.5rem; font-weight:700; font-size:0.8rem;">Response</label>
+                            <pre id="try-pass-output" style="padding: 1rem; font-size: 0.8rem; background: #111;">Waiting for request...</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="status-codes" style="margin-top: 4rem;">
+                <h2>Status Codes</h2>
+                <table class="api-table">
+                    <thead><tr><th>Code</th><th>Meaning</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td><span style="color:var(--success); font-weight:800;">200</span></td><td>OK</td><td>Request processed successfully.</td></tr>
+                        <tr><td><span style="color:var(--danger); font-weight:800;">401</span></td><td>Unauthorized</td><td>API Key is missing or invalid.</td></tr>
+                        <tr><td><span style="color:#d97706; font-weight:800;">429</span></td><td>Too Many Requests</td><td>You've hit your plan's rate limit.</td></tr>
+                        <tr><td><span style="color:var(--danger); font-weight:800;">500</span></td><td>Server Error</td><td>Something went wrong on our end.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="pricing" style="margin-top: 4rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2>Developer Pricing</h2>
+                    <div class="toggle-wrapper">
+                        <span id="curr-label">Show USD</span>
+                        <label class="switch">
+                            <input type="checkbox" id="currencyToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <table class="api-table">
+                    <thead><tr><th>Plan</th><th>Requests/Month</th><th>Price</th></tr></thead>
+                    <tbody>
+                        <tr><td><b>Hobby</b></td><td>1,000</td><td>Free</td></tr>
+                        <tr><td><b>Startup</b></td><td>50,000</td><td class="price-val" data-ksh="4999" data-usd="38">KSH 4999/mo</td></tr>
+                        <tr><td><b>Enterprise</b></td><td>Unlimited</td><td>Contact Me</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="sdks" style="margin-top: 4rem;">
+                <h2>Official SDKs</h2>
+                <p>Accelerate development with our official libraries.</p>
+                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                    <div style="background:var(--card-bg); border:1px solid var(--border); padding:1rem; border-radius:0.5rem; flex:1; min-width:200px;">
+                        <strong>Python</strong>
+                        <div style="margin-top:0.5rem; font-family:monospace; opacity:0.7;">pip install cyberguard-py</div>
+                    </div>
+                    <div style="background:var(--card-bg); border:1px solid var(--border); padding:1rem; border-radius:0.5rem; flex:1; min-width:200px;">
+                        <strong>Node.js</strong>
+                        <div style="margin-top:0.5rem; font-family:monospace; opacity:0.7;">npm install @cyberguard/sdk</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <span class="footer-brand">CYBERGUARD</span>
+            <p>Project By: Daniel Karanja (DK)</p>
+        </div>
+    </footer>
+
+    <script src="/developers page/api.js"></script>
+</body>
+</html>

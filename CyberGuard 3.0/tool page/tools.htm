@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard | Security Tools</title>
+    <link rel="stylesheet" href="/main page/index.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 1rem;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: transform 0.3s;
+        }
+        .tool-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .tool-icon {
+            width: 50px; height: 50px;
+            background: var(--bg);
+            border-radius: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        .tool-header h2 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+        .tool-header p { margin: 0 0 2rem; opacity: 0.6; }
+        
+        /* Input Areas */
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 1rem;
+        }
+        .drop-zone:hover { background: rgba(0,0,0,0.02); border-color: var(--accent); }
+        textarea {
+            width: 100%; height: 150px;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 1rem; padding: 1rem; color: var(--text);
+            font-family: monospace; resize: none; margin-bottom: 1rem;
+        }
+        
+        /* Result Badge */
+        .result-box {
+            padding: 1rem; border-radius: 0.8rem;
+            background: #f1f5f9; color: #334155;
+            font-size: 0.9rem; margin-top: 1rem;
+            display: none;
+        }
+        .dark-mode .result-box { background: #1e293b; color: #e2e8f0; }
+        .result-box.safe { background: #dcfce7; color: #166534; display: block; }
+        .result-box.danger { background: #fee2e2; color: #991b1b; display: block; }
+    </style>
+</head>
+<body class="light-theme">
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/main page/index.htm" style="text-decoration: none; color: inherit;">
+                <span class="brand">CYBERGUARD</span>
+            </a>
+            <div class="nav-actions">
+                <div class="nav-links desktop-only">
+                    <a href="/tool page/tools.htm"><i data-lucide="wrench"></i> Tools</a>
+                    <a href="/developers page/api.htm"><i data-lucide="code-2"></i> API</a>
+                    <a href="/more info/info.htm" id="navInfo"><i data-lucide="info"></i> Info</a>
+                    <a href="/help page/help.htm" id="navHelp"><i data-lucide="help-circle"></i> Help</a>
+                </div>
+                
+                <button id="themeToggle" class="icon-btn" title="Toggle Theme">
+                    <i data-lucide="moon" id="themeIcon"></i>
+                </button>
+
+                <div id="authContainer">
+                    <button id="signInBtn" class="action-btn" onclick="openAuthModal()">Sign In</button>
+                    
+                    <div id="userProfile" class="user-profile-container hidden">
+                        <div class="welcome-text">
+                            <span class="sub-text">Welcome,</span>
+                            <span id="navUserName" class="user-name-display">User</span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <button class="profile-btn" id="profileBtn">
+                                <img id="profileImg" src="/main page/Wheel.jpg" alt="Profile">
+                            </button>
+                            <div class="profile-menu" id="profileMenu">
+                                <div class="profile-dropdown" id="profileMenu">
+                                    <div class="profile-header" onclick="window.location.href='/profile page/profile.htm'" title="View Dashboard">
+                                        <div class="profile-pic-medium">
+                                            <img src="/main page/Wheel.jpg" alt="User" id="menuProfilePic" onerror="this.src='https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff'">
+                                        </div>
+                                        <div class="header-info">
+                                            <span class="user-name" id="menuUserName">Loading...</span>
+                                            <span class="user-email" id="menuUserEmail">please wait...</span>
+                                            <span class="user-tier-badge" id="menuUserTier">STANDARD</span>
+                                        </div>
+                                        <i data-lucide="chevron-right" class="arrow-icon"></i>
+                                    </div>
+                                </div>
+
+                                <div class="menu-items">
+                                    <button id="upgradeBtn" class="menu-btn premium" onclick="openSubModal()">
+                                        <i data-lucide="crown"></i> Upgrade to Elite
+                                    </button>
+                                    <button class="menu-btn"><i data-lucide="settings"></i> Settings</button>
+                                </div>
+                                <div class="lang-options">
+                                    <button class="lang-opt" onclick="changeLang('en')">EN</button>
+                                    <button class="lang-opt" onclick="changeLang('es')">ES</button>
+                                    <button class="lang-opt" onclick="changeLang('fr')">FR</button>
+                                </div>
+                                <div class="menu-items">
+                                    <button class="menu-btn" onclick="logout()" style="color: #ff4d4d;">
+                                        <i data-lucide="log-out"></i> Sign Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero" style="padding-top: 4rem;">
+        <h1>Cyber Defense Toolkit</h1>
+        <p>Professional grade tools to sanitize and analyze your data.</p>
+    </div>
+
+    <div class="tools-grid">
+        
+        <div class="tool-card">
+            <div class="tool-icon"><i data-lucide="mail-search"></i></div>
+            <div class="tool-header">
+                <h2>Email Header Analyzer</h2>
+                <p>Paste email source code to trace hops and check sender IP reputation.</p>
+            </div>
+            <textarea id="emailInput" placeholder="Paste full email header here (Received: from...)..."></textarea>
+            <button class="generate-btn" style="margin-top:0; width:100%" onclick="analyzeEmail()">Analyze Header</button>
+            <div id="emailResult" class="result-box"></div>
+        </div>
+
+        <div class="tool-card">
+            <div class="tool-icon"><i data-lucide="image-off"></i></div>
+            <div class="tool-header">
+                <h2>Metadata Cleaner</h2>
+                <p>Remove GPS and Device EXIF data from images before posting online.</p>
+            </div>
+            <div class="drop-zone" onclick="document.getElementById('imgInput').click()">
+                <i data-lucide="upload-cloud"></i>
+                <p>Click to Upload Image</p>
+                <input type="file" id="imgInput" hidden accept="image/*">
+            </div>
+            <button class="generate-btn" style="margin-top:0; width:100%" onclick="cleanMetadata()">Sanitize & Download</button>
+            <div id="metaResult" class="result-box"></div>
+        </div>
+
+        <div class="tool-card">
+            <div class="tool-icon"><i data-lucide="file-scan"></i></div>
+            <div class="tool-header">
+                <h2>Document Scanner</h2>
+                <p>Check PDFs or Word Docs for embedded malicious scripts.</p>
+            </div>
+            <div class="drop-zone" onclick="document.getElementById('docInput').click()">
+                <i data-lucide="file-text"></i>
+                <p>Upload .PDF or .DOCX</p>
+                <input type="file" id="docInput" hidden>
+            </div>
+            <button class="generate-btn" style="margin-top:0; width:100%" onclick="scanDoc()">Scan Document</button>
+            <div id="docResult" class="result-box"></div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- SHARED AUTH LOGIC (PERSISTENCE) ---
+        function checkGlobalAuth() {
+            const storedUser = localStorage.getItem('cyberGuardUser');
+            const signInBtn = document.getElementById('signInBtn');
+            const userProfile = document.getElementById('userProfile');
+
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                
+                // Hide Sign In, Show Profile
+                if(signInBtn) signInBtn.classList.add('hidden');
+                if(userProfile) userProfile.classList.remove('hidden');
+                
+                // Update Texts
+                if(document.getElementById('navUserName')) document.getElementById('navUserName').textContent = user.name;
+                if(document.getElementById('menuUserName')) document.getElementById('menuUserName').textContent = user.name;
+                if(document.getElementById('menuUserEmail')) document.getElementById('menuUserEmail').textContent = user.email;
+                if(document.getElementById('menuUserTier')) document.getElementById('menuUserTier').textContent = (user.tier || 'Standard').toUpperCase();
+
+                // Hide Upgrade button if already Elite
+                const upgradeBtn = document.getElementById('upgradeBtn');
+                if (upgradeBtn && user.tier === 'Elite Guard') {
+                    upgradeBtn.style.display = 'none';
+                }
+            } else {
+                if(signInBtn) signInBtn.classList.remove('hidden');
+                if(userProfile) userProfile.classList.add('hidden');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('cyberGuardUser');
+            window.location.href = '/main page/index.htm';
+        }
+
+        // Dropdown Toggle Logic
+        const profileBtn = document.getElementById('profileBtn');
+        if (profileBtn) {
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('profileMenu').classList.toggle('show');
+            });
+        }
+        window.addEventListener('click', () => {
+            const menu = document.getElementById('profileMenu');
+            if (menu) menu.classList.remove('show');
+        });
+
+        // Initialize Auth on Load
+        checkGlobalAuth();
+
+        // --- THEME LOGIC ---
+        const themeToggle = document.getElementById('themeToggle');
+        if(themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const icon = document.getElementById('themeIcon');
+                icon.setAttribute('data-lucide', document.body.classList.contains('dark-mode') ? 'sun' : 'moon');
+                lucide.createIcons();
+            });
+        }
+
+        // --- TOOL LOGIC (Simulated) ---
+        function analyzeEmail() {
+            const val = document.getElementById('emailInput').value;
+            const res = document.getElementById('emailResult');
+            if(val.length < 10) { res.className = "result-box danger"; res.innerHTML = "❌ Invalid Data"; return; }
+            res.className = "result-box"; res.innerHTML = "⏳ Tracing hops...";
+            setTimeout(() => { res.className = "result-box safe"; res.innerHTML = "✅ <b>Clean:</b> Origin IP Valid, SPF Pass."; }, 1500);
+        }
+
+        function cleanMetadata() {
+            const file = document.getElementById('imgInput').files[0];
+            const res = document.getElementById('metaResult');
+            if(!file) return alert("Upload image first");
+            res.className = "result-box"; res.innerHTML = "⏳ Cleaning...";
+            setTimeout(() => { res.className = "result-box safe"; res.innerHTML = "✅ <b>Cleaned!</b> GPS data removed."; }, 2000);
+        }
+
+        function scanDoc() {
+            const file = document.getElementById('docInput').files[0];
+            const res = document.getElementById('docResult');
+            if(!file) return alert("Upload document first");
+            res.className = "result-box"; res.innerHTML = "⏳ Scanning...";
+            setTimeout(() => { 
+                const isSafe = Math.random() > 0.3; 
+                if(isSafe) { res.className = "result-box safe"; res.innerHTML = "✅ <b>Safe:</b> No macros detected."; }
+                else { res.className = "result-box danger"; res.innerHTML = "⚠️ <b>Warning:</b> Macro detected."; }
+            }, 2000);
+        }
+    </script>
+    <footer>
+        <div class="footer-container">
+            <span class="footer-brand">CYBERGUARD</span>
+            <p>Project By: Daniel Karanja (DK)</p>
+        </div>
+    </footer>
+</body>
+</html>

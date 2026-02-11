@@ -3,10 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="Creator" description="Daniel Karanja (DK)">
-    <title>CyberGuard | Intelligence Reports</title>
+    <title>CyberGuard | Threat Intel & Map</title>
     <link rel="stylesheet" href="/reports page/reports.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* INLINE STYLES FOR MAP & UPTIME (Move to reports.css later if desired) */
+        .map-section {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #0f172a; /* Deep ocean blue */
+            border-radius: 1.5rem;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .world-map-bg {
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg'); /* Simple SVG Map */
+            background-size: cover;
+            background-position: center;
+            filter: invert(1); /* Makes it look techy/white on dark bg */
+        }
+        .threat-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulseThreat 1.5s ease-out forwards;
+            box-shadow: 0 0 10px #ef4444;
+        }
+        @keyframes pulseThreat {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+        .map-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: #22c55e;
+            font-family: monospace;
+            border: 1px solid #22c55e;
+        }
+
+        /* UPTIME MONITOR */
+        .uptime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        .uptime-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .uptime-info h4 { margin: 0; font-size: 1.1rem; }
+        .uptime-info span { font-size: 0.8rem; opacity: 0.6; }
+        .status-badge {
+            background: #dcfce7; color: #15803d;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 800;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .status-badge.down { background: #fee2e2; color: #991b1b; }
+        .pulse-dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+    </style>
 </head>
 <body class="light-theme">
 
@@ -17,28 +94,102 @@
             </a>
             <div class="nav-actions">
                 <div class="nav-links desktop-only">
-                    <a href="/main page/index.htm"><b>←</b> Back to Scanner</a>
+                    <a href="/tool page/tools.htm"><i data-lucide="wrench"></i> Tools</a>
+                    <a href="/developers page/api.htm"><i data-lucide="code-2"></i> API</a>
+                    <a href="/more info/info.htm" id="navInfo"><i data-lucide="info"></i> Info</a>
+                    <a href="/help page/help.htm" id="navHelp"><i data-lucide="help-circle"></i> Help</a>
                 </div>
+                
                 <button id="themeToggle" class="icon-btn" title="Toggle Theme">
                     <i data-lucide="moon" id="themeIcon"></i>
                 </button>
+
+                <div id="authContainer">
+                    <button id="signInBtn" class="action-btn" onclick="openAuthModal()">Sign In</button>
+                    
+                    <div id="userProfile" class="user-profile-container hidden">
+                        <div class="welcome-text">
+                            <span class="sub-text">Welcome,</span>
+                            <span id="navUserName" class="user-name-display">User</span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <button class="profile-btn" id="profileBtn">
+                                <img id="profileImg" src="/main page/Wheel.jpg" alt="Profile">
+                            </button>
+                            <div class="profile-menu" id="profileMenu">
+                                <div class="profile-dropdown" id="profileMenu">
+                                    <div class="profile-header" onclick="window.location.href='/profile page/profile.htm'" title="View Dashboard">
+                                        <div class="profile-pic-medium">
+                                            <img src="/main page/Wheel.jpg" alt="User" id="menuProfilePic" onerror="this.src='https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff'">
+                                        </div>
+                                        <div class="header-info">
+                                            <span class="user-name" id="menuUserName">Loading...</span>
+                                            <span class="user-email" id="menuUserEmail">please wait...</span>
+                                            <span class="user-tier-badge" id="menuUserTier">STANDARD</span>
+                                        </div>
+                                        <i data-lucide="chevron-right" class="arrow-icon"></i>
+                                    </div>
+                                </div>
+
+                                <div class="menu-items">
+                                    <button id="upgradeBtn" class="menu-btn premium" onclick="openSubModal()">
+                                        <i data-lucide="crown"></i> Upgrade to Elite
+                                    </button>
+                                    <button class="menu-btn"><i data-lucide="settings"></i> Settings</button>
+                                </div>
+                                <div class="lang-options">
+                                    <button class="lang-opt" onclick="changeLang('en')">EN</button>
+                                    <button class="lang-opt" onclick="changeLang('es')">ES</button>
+                                    <button class="lang-opt" onclick="changeLang('fr')">FR</button>
+                                </div>
+                                <div class="menu-items">
+                                    <button class="menu-btn" onclick="logout()" style="color: #ff4d4d;">
+                                        <i data-lucide="log-out"></i> Sign Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="news-ticker-wrap">
-        <div class="ticker-heading">LATEST INTEL</div>
-        <div class="ticker-track">
-            <div class="ticker-item">😱 New Zero-Day vulnerability found in popular browser engines.</div>
-            <div class="ticker-item">🫨 Major bank thwarts multi-million dollar phishing attempt using AI.</div>
-            <div class="ticker-item">⚠️ Ransomware attacks up by 20% in 2026.</div>
-            <div class="ticker-item">🛡️ CyberGuard releases new patch for SQL injection detection.</div>
-            <div class="ticker-item">😑 IDK what else to add here soooooo....</div>
-            <div class="ticker-item">I hope u enjoyed this presentation :></div>
-        </div>
-    </div>
+    <main style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+        
+        <header class="hero" style="text-align: center; margin-bottom: 3rem;">
+            <h1>Global Threat Intelligence</h1>
+            <p style="opacity: 0.6;">Live visualization of simulated cyber attacks and service status.</p>
+        </header>
 
-    <main>
+        <section class="map-section" id="threatMap">
+            <div class="world-map-bg"></div>
+            <div class="map-overlay">
+                <div>LIVE ATTACKS DETECTED</div>
+                <div id="attackCount">0 EVENTS / SEC</div>
+            </div>
+        </section>
+
+        <h2 class="section-title">Service Uptime Monitor</h2>
+        <section class="uptime-grid">
+            <div class="uptime-card">
+                <div class="uptime-info"><h4>Google Cloud</h4><span>us-east-1</span></div>
+                <div class="status-badge"><div class="pulse-dot"></div> OPERATIONAL</div>
+            </div>
+            <div class="uptime-card">
+                <div class="uptime-info"><h4>AWS Services</h4><span>Global</span></div>
+                <div class="status-badge"><div class="pulse-dot"></div> OPERATIONAL</div>
+            </div>
+            <div class="uptime-card">
+                <div class="uptime-info"><h4>Azure Identity</h4><span>Europe</span></div>
+                <div class="status-badge"><div class="pulse-dot"></div> OPERATIONAL</div>
+            </div>
+            <div class="uptime-card">
+                <div class="uptime-info"><h4>CyberGuard API</h4><span>Gateway</span></div>
+                <div class="status-badge"><div class="pulse-dot"></div> 99.99% UP</div>
+            </div>
+        </section>
+
         <header class="hero" style="padding-top: 3rem;">
             <h1 id="heroTitle">Threat Intelligence</h1>
             <p class="subtitle">Real-time statistics, attack breakdowns, and deep-dive security reports.</p>
@@ -169,31 +320,44 @@
             </div>
         </section>
 
+
     </main>
 
+    <script src="/reports page/reports.js"></script>
+    <script>
+        // --- THREAT MAP LOGIC ---
+        const mapSection = document.getElementById('threatMap');
+        const countDisplay = document.getElementById('attackCount');
+        
+        setInterval(() => {
+            // Generate random attack
+            const dot = document.createElement('div');
+            dot.classList.add('threat-dot');
+            // Random X/Y % within container
+            const x = Math.random() * 90 + 5; 
+            const y = Math.random() * 80 + 10;
+            dot.style.left = x + '%';
+            dot.style.top = y + '%';
+            
+            // Random Color (Red = Attack, Yellow = Probe)
+            if(Math.random() > 0.7) dot.style.background = '#facc15'; // Yellow
+            
+            mapSection.appendChild(dot);
+            
+            // Update Counter
+            countDisplay.innerText = Math.floor(Math.random() * 50 + 20) + " EVENTS / SEC";
+
+            // Cleanup DOM
+            setTimeout(() => dot.remove(), 1500);
+        }, 400); // Speed of attacks
+
+        lucide.createIcons();
+    </script>
     <footer>
         <div class="footer-container">
             <span class="footer-brand">CYBERGUARD</span>
-            <p>Project By: Daniel Karanja (DK) </p>
+            <p>Project By: Daniel Karanja (DK)</p>
         </div>
     </footer>
-    <div id="analysisModal" class="modal-overlay hidden">
-        <div class="modal-card">
-            <button class="modal-close" onclick="closeModal()">
-                <i data-lucide="x"></i>
-            </button>
-            <div class="modal-image-wrapper">
-                <img id="modalImg" src="" alt="Report Cover">
-            </div>
-            <div class="modal-content-text">
-                <div id="modalBody">
-                    </div>
-            </div>
-        </div>
-    </div>
-    <script src="/reports page/reports.js"></script>
-    <script>
-        lucide.createIcons();
-    </script>
 </body>
 </html>

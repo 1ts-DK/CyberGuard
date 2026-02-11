@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard | User Dashboard</title>
+    <link rel="stylesheet" href="/main page/index.css">
+    <link rel="stylesheet" href="/profile page/profile.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="light-theme">
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/main page/index.htm" style="text-decoration: none; color: inherit;">
+                <span class="brand">CYBERGUARD</span>
+            </a>
+            <div class="nav-actions">
+                <button id="themeToggle" class="icon-btn"><i data-lucide="moon" id="themeIcon"></i></button>
+                <div class="user-profile-container">
+                    <span id="navUserName" style="font-weight: 800;">User</span>
+                    <button class="profile-btn" onclick="window.location.href='/main page/index.htm'"><i data-lucide="home"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="user-card">
+                <div class="profile-pic-large"><img src="/main page/Wheel.jpg" alt="User"></div>
+                <h3 id="display-name">Loading...</h3>
+                <span id="display-tier" class="tier-badge">STANDARD</span>
+            </div>
+            
+            <nav class="side-nav">
+                <button class="nav-item active" onclick="switchTab('overview')"><i data-lucide="layout-dashboard"></i> Dashboard</button>
+                <button class="nav-item" onclick="switchTab('history')"><i data-lucide="history"></i> Scan History</button>
+                <button class="nav-item" onclick="switchTab('subscription')"><i data-lucide="credit-card"></i> Subscription</button>
+                <button class="nav-item" onclick="switchTab('settings')"><i data-lucide="settings-2"></i> Settings</button>
+                <button class="nav-item danger" onclick="logout()"><i data-lucide="log-out"></i> Sign Out</button>
+            </nav>
+        </aside>
+
+        <main class="content-area">
+            
+            <section id="overview" class="tab-content active">
+                <div class="welcome-header">
+                    <h1>Welcome back, <span id="welcome-name">User</span>!</h1>
+                    <div class="daily-tip" id="daily-tip-box">
+                        <i data-lucide="lightbulb" style="color:var(--accent);"></i>
+                        <span id="daily-tip-text">Loading daily security intel...</span>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="icon-box blue"><i data-lucide="shield"></i></div>
+                        <div>
+                            <h3>Current Streak</h3>
+                            <p><span id="streak-count">0</span> Days Protected</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon-box green"><i data-lucide="activity"></i></div>
+                        <div>
+                            <h3>Usage</h3>
+                            <p><span id="scan-count">0</span> Scans this month</p>
+                            <div class="progress-bar"><div class="fill" id="usage-fill" style="width: 0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon-box purple"><i data-lucide="map-pin"></i></div>
+                        <div>
+                            <h3>Active Session</h3>
+                            <p>Nairobi, Kenya <span class="blink">●</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-split">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2><i data-lucide="radar"></i> Breach Monitoring</h2>
+                            <span class="status-badge safe">ACTIVE</span>
+                        </div>
+                        <div class="breach-visual">
+                            <div class="radar-circle"></div>
+                            <div class="radar-scan"></div>
+                        </div>
+                        <p class="panel-desc">Monitoring <span id="monitored-email">user@email.com</span> for leaks on the dark web.</p>
+                        <div id="breach-watchlist" class="watchlist-container">
+                            </div>
+                        <button class="action-btn-small" onclick="addToWatchlist()">+ Add Email to Watchlist</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2><i data-lucide="award"></i> Your Badges</h2>
+                        </div>
+                        <div class="badges-grid" id="badges-container">
+                            </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="history" class="tab-content">
+                <div class="section-header">
+                    <h2>Scan History</h2>
+                    <div class="header-actions">
+                        <div class="toggle-wrapper">
+                            <span>Incognito Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" id="incognitoToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <button class="outline-btn" onclick="exportPDF()"><i data-lucide="download"></i> Export Report (PDF)</button>
+                    </div>
+                </div>
+                <div class="history-table-wrapper">
+                    <table class="full-table">
+                        <thead><tr><th>Time</th><th>Type</th><th>Target</th><th>Result</th><th>Action</th></tr></thead>
+                        <tbody id="profile-history-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="subscription" class="tab-content">
+                <div class="section-header"><h2>Plan & Billing</h2></div>
+                
+                <div class="sub-matrix">
+                    <div class="matrix-col">
+                        <h3>Feature</h3>
+                        <div class="matrix-row">URL Scanning</div>
+                        <div class="matrix-row">Password Entropy</div>
+                        <div class="matrix-row">Daily Scan Limit</div>
+                        <div class="matrix-row">Dark Web Monitor</div>
+                        <div class="matrix-row">API Access</div>
+                        <div class="matrix-row">Encrypted Vault</div>
+                    </div>
+                    
+                    <div class="matrix-col plan-col">
+                        <h3>Standard</h3>
+                        <div class="price">Free</div>
+                        <div class="matrix-row"><i data-lucide="check" class="check"></i></div>
+                        <div class="matrix-row"><i data-lucide="check" class="check"></i></div>
+                        <div class="matrix-row">10 / day</div>
+                        <div class="matrix-row"><i data-lucide="x" class="cross"></i></div>
+                        <div class="matrix-row"><i data-lucide="x" class="cross"></i></div>
+                        <div class="matrix-row"><i data-lucide="x" class="cross"></i></div>
+                        <button class="plan-btn" onclick="changePlan('Standard Guard')">Current</button>
+                    </div>
+
+                    <div class="matrix-col plan-col recommended">
+                        <div class="rec-badge">RECOMMENDED</div>
+                        <h3>Elite</h3>
+                        <div class="price">KSH 1200</div>
+                        <div class="matrix-row"><i data-lucide="check" class="check"></i></div>
+                        <div class="matrix-row"><i data-lucide="check" class="check"></i></div>
+                        <div class="matrix-row">Unlimited</div>
+                        <div class="matrix-row"><i data-lucide="check" class="check"></i></div>
+                        <div class="matrix-row"><i data-lucide="check" class="check"></i></div>
+                        <div class="matrix-row"><i data-lucide="check" class="check"></i></div>
+                        <button class="plan-btn primary" onclick="changePlan('Elite Guard')">Upgrade Now</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="settings" class="tab-content">
+                <h2>Account Settings</h2>
+                
+                <div class="settings-group">
+                    <div class="setting-item">
+                        <div>
+                            <h4>Notification Preferences</h4>
+                            <p>Get alerted for major global cyber threats.</p>
+                        </div>
+                        <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div>
+                            <h4>Auto-Destruct History</h4>
+                            <p>Automatically wipe scan logs every 24 hours.</p>
+                        </div>
+                        <label class="switch"><input type="checkbox" id="autoDestruct"><span class="slider"></span></label>
+                    </div>
+
+                    <div class="setting-item elite-locked">
+                        <div>
+                            <h4><i data-lucide="lock"></i> Hidden Vault</h4>
+                            <p>Store sensitive notes (Elite Only).</p>
+                        </div>
+                        <button class="outline-btn" disabled>Locked</button>
+                    </div>
+                </div>
+
+                <div class="panic-zone">
+                    <h3>Danger Zone</h3>
+                    <p>This action is irreversible.</p>
+                    <button class="panic-btn" onclick="panicClear()"><i data-lucide="alert-triangle"></i> PANIC BUTTON: WIPE ALL DATA</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="toast" class="toast hidden">
+        <div class="toast-icon"><i data-lucide="bell"></i></div>
+        <div class="toast-content">
+            <h4 id="toast-title">Security Alert</h4>
+            <p id="toast-msg">Daily Briefing...</p>
+        </div>
+        <button onclick="closeToast()"><i data-lucide="x"></i></button>
+    </div>
+
+    <script src="/profile page/profile.js"></script>
+</body>
+</html>

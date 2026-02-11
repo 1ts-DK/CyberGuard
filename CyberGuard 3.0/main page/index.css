@@ -322,6 +322,16 @@ footer p {
     
     /* Footer Stack for Mobile */
     .footer-container { flex-direction: column; gap: 1.5rem; text-align: center; }
+.nav-actions {
+        gap: 0.5rem;
+    }
+    
+    /* Make the profile name smaller */
+    .user-profile-container {
+        margin-left: 5px;
+        padding-left: 5px;
+    }
+    .welcome-text { display: none; } /* Hide "Welcome, User" text to save space */
 }
 
 @keyframes fadeIn {
@@ -440,3 +450,556 @@ footer p {
 .modal-card::-webkit-scrollbar-track { background: transparent; }
 .modal-card::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
 
+/* --- PASTE THIS AT THE VERY BOTTOM OF index.css --- */
+
+/* --- NEW PROFILE DROPDOWN --- */
+.profile-dropdown { position: relative; }
+
+.profile-btn {
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-text);
+    border: 2px solid var(--border);
+    cursor: pointer;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s;
+}
+.profile-btn:hover { transform: scale(1.05); }
+.profile-btn img { width: 100%; height: 100%; object-fit: cover; }
+
+.profile-menu {
+    display: none;
+    position: absolute;
+    right: 0; top: 120%;
+    width: 260px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    z-index: 1001;
+    overflow: hidden;
+    animation: slideDown 0.2s ease;
+}
+.profile-menu.show { display: block; }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-header {
+    padding: 1.5rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+}
+.user-name { font-weight: 900; font-size: 1.1rem; display: block; }
+.user-email { font-size: 0.85rem; opacity: 0.6; }
+
+.menu-items { padding: 0.5rem; }
+.menu-btn {
+    width: 100%; text-align: left;
+    padding: 0.8rem 1rem;
+    background: none; border: none;
+    color: var(--text); font-weight: 600;
+    cursor: pointer; border-radius: 0.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+    transition: background 0.2s;
+}
+.menu-btn:hover { background: rgba(0,0,0,0.05); }
+.menu-btn.premium { color: #d97706; } /* Gold/Orange for premium */
+
+.lang-options {
+    display: flex; gap: 0.5rem; padding: 0.5rem 1rem;
+    border-top: 1px solid var(--border);
+}
+.lang-opt {
+    flex: 1; padding: 0.5rem; border: 1px solid var(--border);
+    background: transparent; border-radius: 0.5rem; cursor: pointer;
+    font-size: 0.8rem; font-weight: 700; color: var(--text);
+}
+.lang-opt:hover { background: var(--bg); }
+
+/* --- SUBSCRIPTION MODAL STYLES --- */
+/* Specific width for the subscription modal only */
+.modal-card.sub-modal {
+    max-width: 1100px; 
+    width: 95%;
+    padding: 1rem;
+}
+
+/* Horizontal Grid Logic */
+.sub-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Forces 3 columns */
+    gap: 1.5rem;
+    align-items: stretch; /* Makes all cards the same height */
+}
+
+.sub-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pushes button to bottom */
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    border-radius: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.sub-card:hover {
+    transform: translateY(-5px);
+}
+
+.sub-card.advanced {
+    border: 2px solid var(--accent); /* Highlights the middle plan */
+}
+
+.sub-card.elite {
+    border: 2px solid #d97706;
+    background: linear-gradient(to bottom, var(--card-bg), rgba(217, 119, 6, 0.03));
+}
+
+.feature-list li {
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+}
+
+.feature-list i {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 900px) {
+    .sub-grid {
+        grid-template-columns: 1fr; /* Stacks on small screens */
+    }
+    .modal-card.sub-modal {
+        max-width: 500px;
+    }
+}
+
+.sub-btn {
+    width: 100%; padding: 1rem; border: none; border-radius: 0.8rem;
+    font-weight: 800; cursor: pointer; font-size: 1rem;
+    transition: transform 0.2s;
+    background: rgba(0,0,0,0.1); color: var(--text);
+}
+.sub-btn.primary { background: #d97706; color: white; }
+.sub-btn:hover { transform: translateY(-2px); }
+
+/* --- AUTHENTICATION & NAV UPDATES --- */
+
+/* --- HEADER ALIGNMENT FIX --- */
+.user-profile-container {
+    display: flex;
+    align-items: center; 
+    gap: 12px;           
+    margin-left: 15px;
+    padding-left: 15px;
+    border-left: 1px solid var(--border);
+}
+
+.welcome-text {
+    display: flex;
+    flex-direction: column;
+    text-align: right; 
+    line-height: 1.1;
+}
+
+.welcome-text .sub-text {
+    font-size: 0.65rem;
+    font-weight: 700;
+    opacity: 0.5;
+    text-transform: uppercase;
+}
+
+.welcome-text .user-name-display {
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+/* Visibility Helpers */
+.hidden { display: none !important; }
+.profile-menu.show { display: block !important; }
+
+/* Plan Selection List in Auth Modal */
+.plan-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.plan-option {
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.plan-option:hover { background: rgba(0,0,0,0.05); border-color: var(--text); }
+.plan-option.recommended { border: 2px solid #d97706; background: rgba(217, 119, 6, 0.05); }
+
+/* User Tier Badge */
+.user-tier-badge {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    color: #d97706; 
+    background: rgba(217, 119, 6, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+/* --- AUTH MODAL PLAN SELECTOR --- */
+.plan-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: left;
+}
+
+.plan-option {
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    background: var(--bg);
+}
+
+.plan-option:hover {
+    border-color: var(--accent);
+    background: rgba(0,0,0,0.02);
+}
+
+.plan-option.recommended {
+    border: 2px solid #d97706; /* Gold border */
+    background: linear-gradient(to right, rgba(217, 119, 6, 0.05), transparent);
+}
+
+.plan-tag {
+    position: absolute;
+    top: -8px;
+    right: 1rem;
+    background: #d97706;
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.plan-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.plan-info strong { font-size: 1rem; }
+.plan-info span { font-size: 0.8rem; opacity: 0.6; }
+
+.plan-price {
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* --- EXISTING STYLES (Keep these) --- */
+.action-btn {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.action-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.action-btn.full-width { width: 100%; margin-top: 1rem; padding: 1rem; font-size: 1.1rem; }
+.auth-card { max-width: 450px; text-align: center; padding: 3rem 2rem; overflow: hidden; }
+.auth-icon { width: 80px; height: 80px; background: rgba(0,0,0,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--text); }
+.auth-icon svg { width: 40px; height: 40px; }
+.auth-input { width: 100%; padding: 1.2rem; border-radius: 1rem; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem; outline: none; text-align: center; }
+.auth-input:focus { border-color: var(--text); }
+.scanner-ring { width: 60px; height: 60px; border: 4px solid rgba(0,0,0,0.1); border-top: 4px solid var(--text); border-radius: 50%; margin: 0 auto 1.5rem; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.breach-alert-card { background: #fef2f2; border: 1px solid #fecaca; border-radius: 1rem; overflow: hidden; margin-top: 1rem; text-align: left; }
+.breach-header { background: #ef4444; color: white; padding: 0.8rem 1.2rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px; }
+.breach-body { padding: 1.5rem; color: #991b1b; }
+.breach-body h3 { margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 800; }
+.dark-mode .breach-alert-card { background: #2a1212; border-color: #451a1a; }
+.dark-mode .breach-body { color: #fecaca; }
+.history-table-container { background: var(--card-bg); border-radius: 1.5rem; padding: 1rem; overflow-x: auto; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+.history-table { width: 100%; border-collapse: collapse; }
+.history-table th { text-align: left; padding: 1rem; font-size: 0.8rem; text-transform: uppercase; opacity: 0.5; border-bottom: 1px solid var(--border); }
+.history-table td { padding: 1.2rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; font-weight: 500; }
+.history-table tr:last-child td { border-bottom: none; }
+
+/* --- RESPONSIVE / MOBILE STYLES --- */
+/* --- UNIVERSAL SCALING SYSTEM (The "Zoom" Logic) --- */
+
+html {
+    /* This helps the site scale smoothly between laptop and large screens.
+       16px is standard for laptops. We use a calculation for larger screens.
+    */
+    font-size: 16px; 
+}
+
+/* 🖥️ LARGE SCREENS & SMART BOARDS (1080p - 2K) */
+/* Scales everything up by ~20% so it doesn't look tiny */
+@media (min-width: 1920px) {
+    html {
+        font-size: 20px; 
+    }
+    
+    .nav-container, 
+    .footer-container, 
+    .stats-section, 
+    .info-section {
+        max-width: 90%; /* Let the content stretch wide */
+    }
+}
+
+
+
+/* 📺 ULTRA-LARGE SMART BOARDS (4K) */
+/* Scales everything up by 200% - acts like a giant laptop screen */
+@media (min-width: 2560px) {
+    html {
+        font-size: 32px; /* Huge text for distance reading */
+    }
+
+    .nav-container, 
+    .footer-container {
+        max-width: 92%;
+    }
+
+    /* Fix hero height so it doesn't get cut off */
+    .hero {
+        min-height: 60vh;
+        padding-top: 6rem;
+    }
+
+    /* Make the modal (popup) comfortable to reach on a high board */
+    .modal-card {
+        max-width: 60%;
+        margin-top: 10vh;
+    }
+}
+
+/* --- MOBILE & TABLET STYLES (Preserving your stack layout) --- */
+
+/* 📱 TABLETS & SMALL LAPTOPS */
+@media (max-width: 1024px) {
+    html {
+        font-size: 14px; /* Slightly smaller text to fit more on screen */
+    }
+    
+    .nav-container, 
+    .footer-container {
+        width: 95%;
+    }
+}
+
+/* 📱 MOBILE PHONES */
+@media (max-width: 768px) {
+    /* --- Navbar & Header --- */
+    .navbar { 
+        padding: 1rem; 
+    }
+    .brand { 
+        font-size: 1.2rem; 
+    }
+    .nav-links {
+        display: none; /* Hide desktop links */
+    }
+    
+    /* --- Hero Section --- */
+    .hero { 
+        padding-top: 6rem; 
+        text-align: center;
+    }
+    .hero h1 { 
+        font-size: 2.5rem; 
+        line-height: 1.1; 
+    }
+    .hero p { 
+        font-size: 1rem; 
+        padding: 0 1rem; 
+    }
+
+    /* --- Scanner Interface --- */
+    .scanner-section {
+        width: 90%;
+        padding: 1rem;
+    }
+
+    .mode-tabs { 
+        width: 100%; 
+        justify-content: space-between; 
+        gap: 0.5rem;
+    }
+    
+    .tab { 
+        flex: 1; 
+        justify-content: center; 
+        padding: 0.8rem; 
+        font-size: 0.9rem; 
+    }
+    
+    #mainInput { 
+        font-size: 1.1rem; 
+        padding: 1.2rem; 
+    }
+
+    /* --- Stats Section (Stacking) --- */
+    .stats-section { 
+        flex-direction: column; 
+        gap: 2rem; 
+        padding: 2rem 1rem;
+    }
+    .stat-item {
+        width: 100%;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 1rem;
+    }
+    .stat-item:last-child {
+        border-bottom: none;
+    }
+
+    /* --- Info Grid (Stacking) --- */
+    .info-grid {
+        grid-template-columns: 1fr; /* Force single column */
+        gap: 2rem;
+    }
+    
+    .info-card {
+        min-height: auto;
+    }
+}
+
+/* 📱 TINY PHONES (iPhone SE, etc) */
+@media (max-width: 380px) {
+    html {
+        font-size: 13px; /* Ensure text doesn't overflow */
+    }
+    .hero h1 {
+        font-size: 2rem;
+    }
+}
+
+/* --- FIXED DROPDOWN STYLES --- */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(0,0,0,0.03);
+    border-radius: 12px;
+    margin: 8px;
+    transition: var(--transition);
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.profile-header:hover {
+    background: rgba(0,0,0,0.06);
+    border-color: var(--border);
+}
+
+.dark-mode .profile-header { background: rgba(255,255,255,0.05); }
+
+.profile-pic-medium {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid var(--accent);
+}
+
+.profile-pic-medium img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.user-name {
+    font-weight: 800;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-email {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-tier-badge {
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: var(--accent-text);
+    background: var(--accent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 5px 0;
+}
+
+.arrow-icon {
+    width: 16px;
+    opacity: 0.4;
+}
+
+.logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    background: transparent;
+    border: none;
+    color: #ff4d4d;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+}

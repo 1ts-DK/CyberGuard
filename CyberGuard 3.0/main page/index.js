@@ -2,11 +2,12 @@
 let currentMode = 'pass';
 let currentLang = 'en';
 let privacyTimer;
+let currentUser = null;
+let historyDebounce;
 
-// --- TRANSLATIONS SOURCE OF TRUTH ---
+// --- TRANSLATIONS (Full Content with FIXED Images) ---
 const translations = {
     en: {
-        // ... (Existing translations keep same) ...
         brand: "CYBERGUARD",
         langName: "English",
         heroTitle: "CyberGuard Security Auditor",
@@ -57,16 +58,18 @@ const translations = {
         titleInsecure: "Not Secure",
         titleSuspicious: "Suspicious",
 
-        // --- NEW ARTICLE CONTENT ---
+        // --- NEW ARTICLE CONTENT (Added Images) ---
         articles: {
             card1: {
                 title: "The Math Behind Brute Force",
+                img: "brute force.webp", 
                 body: `<p>Brute force attacks work by trying every possible combination of characters until the correct one is found. The math is simple: it's about entropy.</p>
                        <p>A standard 8-character password using only lowercase letters has about 200 billion combinations. A modern GPU can guess this in minutes.</p>
                        <p><strong>The Solution:</strong> By adding just 4 characters (making it 12) and mixing numbers and symbols, the combinations rise to the quadrillions, taking standard computers centuries to crack.</p>`
             },
             card2: {
                 title: "Essential Security Checklist",
+                img: "security practices.jpg",
                 body: `<p>To keep your digital life secure, follow these non-negotiable rules:</p>
                        <ul>
                            <li><strong>Passphrases over Passwords:</strong> Use 3 random words like "Horse-Battery-Staple".</li>
@@ -77,6 +80,7 @@ const translations = {
             },
             card3: {
                 title: "Common Phishing Indicators",
+                img: "Phishing.jpg",
                 body: `<p>Phishing attempts are getting smarter, but they always leave clues. Watch out for:</p>
                        <p><strong>1. Urgency:</strong> "Act now or your account will be deleted!" is a classic panic tactic.</p>
                        <p><strong>2. The Domain:</strong> Look closely. 'google.com' is safe, but 'goog1e.com' or 'google-security-team.xyz' is a scam.</p>
@@ -135,12 +139,14 @@ const translations = {
         articles: {
             card1: {
                 title: "Matemáticas de Fuerza Bruta",
+                img: "brute force.webp",
                 body: `<p>Los ataques de fuerza bruta prueban todas las combinaciones posibles. Es un juego de números.</p>
                        <p>Una contraseña de 8 letras minúsculas tiene 200 mil millones de combinaciones. Una GPU moderna adivina esto en minutos.</p>
                        <p><strong>La Solución:</strong> Al agregar solo 4 caracteres (total 12) y mezclar números, las combinaciones suben a cuatrillones, tomando siglos descifrarlas.</p>`
             },
             card2: {
                 title: "Lista de Seguridad Esencial",
+                img: "security practices.jpg",
                 body: `<p>Para mantener segura su vida digital, siga estas reglas:</p>
                        <ul>
                            <li><strong>Frases de contraseña:</strong> Use 3 palabras al azar como "Caballo-Batería-Grapa".</li>
@@ -150,6 +156,7 @@ const translations = {
             },
             card3: {
                 title: "Indicadores de Phishing",
+                img: "Phishing.jpg",
                 body: `<p>Los intentos de phishing son cada vez más inteligentes, pero dejan pistas:</p>
                        <p><strong>1. Urgencia:</strong> "¡Actúe ahora o su cuenta será eliminada!" es una táctica de pánico clásica.</p>
                        <p><strong>2. El Dominio:</strong> Mire de cerca. 'google.com' es seguro, pero 'goog1e.com' o 'soporte-banco.xyz' es una estafa.</p>`
@@ -207,12 +214,14 @@ const translations = {
         articles: {
             card1: {
                 title: "Mathématiques de Force Brute",
+                img: "brute force.webp",
                 body: `<p>Les attaques par force brute essaient toutes les combinaisons possibles.</p>
                        <p>Un mot de passe standard de 8 caractères a environ 200 milliards de combinaisons. Un GPU moderne devine cela en quelques minutes.</p>
                        <p><strong>La Solution:</strong> En ajoutant juste 4 caractères (pour 12) et en mélangeant les chiffres, cela prend des siècles à craquer.</p>`
             },
             card2: {
                 title: "Liste de contrôle de sécurité",
+                img: "security practices.jpg",
                 body: `<p>Pour sécuriser votre vie numérique, suivez ces règles :</p>
                        <ul>
                            <li><strong>Phrases secrètes :</strong> Utilisez 3 mots aléatoires.</li>
@@ -222,6 +231,7 @@ const translations = {
             },
             card3: {
                 title: "Indicateurs d'hameçonnage",
+                img: "Phishing.jpg",
                 body: `<p>Les tentatives d'hameçonnage laissent toujours des indices :</p>
                        <p><strong>1. Urgence :</strong> "Agissez maintenant ou votre compte sera supprimé !" est une tactique de panique.</p>
                        <p><strong>2. Le Domaine :</strong> Regardez de près. 'google.com' est sûr, mais 'goog1e.com' est une arnaque.</p>`
@@ -230,233 +240,227 @@ const translations = {
     }
 };
 
-// --- DOM ELEMENTS ---
-const mainInput = document.getElementById('mainInput');
-const resultsGrid = document.getElementById('resultsGrid');
-const badge = document.getElementById('badge');
-const generateBtn = document.getElementById('generateBtn');
-const safeMessage = document.getElementById('safeMessage');
-
-// --- THEME LOGIC ---
-document.getElementById('themeToggle').addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const icon = document.getElementById('themeIcon');
-    const isDark = document.body.classList.contains('dark-mode');
-    icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
-    lucide.createIcons();
-});
-
-// --- DROPDOWN LOGIC ---
-window.onclick = (e) => {
-    // Also close modal if clicking background
-    const modal = document.getElementById('modalOverlay');
-    if (e.target === modal) {
-        closeModal();
-    }
-    
-    if (!e.target.closest('.dropdown')) {
-        document.getElementById('langMenu').classList.remove('show');
-    }
-};
-
-document.getElementById('langBtn').onclick = () => {
-    document.getElementById('langMenu').classList.toggle('show');
-};
-
-// --- MODAL LOGIC (NEW) ---
-function openModal(cardKey) {
-    const t = translations[currentLang];
-    const article = t.articles[cardKey];
-    const modal = document.getElementById('modalOverlay');
-    
-    // Set Image based on card
-    let imgSrc = "";
-    if(cardKey === 'card1') imgSrc = "brute force.webp";
-    if(cardKey === 'card2') imgSrc = "security practices.jpg";
-    if(cardKey === 'card3') imgSrc = "Phishing.jpg";
-    
-    document.getElementById('modalImg').src = imgSrc;
-    document.getElementById('modalTitle').innerText = article.title;
-    document.getElementById('modalBody').innerHTML = article.body;
-    
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden'; // Stop background scrolling
-}
-
-function closeModal() {
-    document.getElementById('modalOverlay').classList.add('hidden');
-    document.body.style.overflow = 'auto'; // Restore scrolling
-}
-
-// --- LANGUAGE SWITCHER ---
+// --- NAVIGATION & LANGUAGE ---
 function changeLang(lang) {
     currentLang = lang;
-    const t = translations[lang];
-
-    // 1. Update Dropdown Text
-    document.getElementById('currentLangText').innerText = t.langName;
-    document.getElementById('langMenu').classList.remove('show');
-
-    // 2. Update Static Text Elements
-    document.getElementById('heroTitle').innerText = t.heroTitle;
-    document.getElementById('heroSub').innerText = t.heroSub;
-    
-    document.getElementById('modePassText').innerText = t.modePass;
-    document.getElementById('modeUrlText').innerText = t.modeUrl;
-    
-    document.getElementById('genBtnText').innerText = t.genBtn;
-    
-    // Stats
-    document.getElementById('stat1').innerText = t.stat1Label;
-    document.querySelector('.stat-item:nth-child(1) h2').innerText = t.stat1Title;
-    document.getElementById('stat2').innerText = t.stat2Label;
-    document.querySelector('.stat-item:nth-child(2) h2').innerText = t.stat2Title;
-    document.getElementById('stat3').innerText = t.stat3Label;
-    document.getElementById('stat4').innerText = t.stat4Label;
-
-    // Info Section
-    document.getElementById('infoTitle').innerText = t.infoTitle;
-    document.getElementById('infoSub').innerText = t.infoSub;
-    document.getElementById('viewAllBtn').innerText = t.viewAll;
-
-    // Cards
-    document.getElementById('card1Title').innerText = t.card1Title;
-    document.getElementById('card1Desc').innerText = t.card1Desc;
-    document.getElementById('link1').innerText = t.link1;
-
-    document.getElementById('card2Title').innerText = t.card2Title;
-    document.getElementById('link2').innerText = t.link2;
-
-    document.getElementById('card3Title').innerText = t.card3Title;
-    document.getElementById('card3Desc').innerText = t.card3Desc;
-    document.getElementById('link3').innerText = t.link3;
-
-    // Footer
-    document.querySelector('.footer-container p').innerText = t.footerText;
-
-    // 3. Update Input Placeholder & Re-run Audit
+    const t = translations[lang] || translations['en'];
+    document.querySelectorAll('.brand').forEach(b => b.textContent = t.brand);
+    document.getElementById('heroTitle').textContent = t.heroTitle;
+    document.getElementById('heroSub').textContent = t.heroSub;
+    document.getElementById('modePassText').textContent = t.modePass;
+    document.getElementById('modeUrlText').textContent = t.modeUrl;
+    document.getElementById('genBtnText').textContent = t.genBtn;
+    document.getElementById('infoTitle').textContent = t.infoTitle;
+    document.getElementById('infoSub').textContent = t.infoSub;
+    document.getElementById('viewAllBtn').textContent = t.viewAll;
     setMode(currentMode);
-    runAudit();
+    lucide.createIcons();
 }
 
-// --- TIMER ---
-function resetPrivacyTimer() {
-    clearTimeout(privacyTimer);
-    if (mainInput.value !== "") {
-        privacyTimer = setTimeout(() => {
-            mainInput.value = "";
-            runAudit();
-            badge.innerText = "TIMEOUT"; 
-            badge.className = "badge idle";
-        }, 30000);
-    }
-}
-
-// --- MODE SWITCHING ---
 function setMode(mode) {
     currentMode = mode;
-    const t = translations[currentLang];
-
+    const t = translations[currentLang] || translations['en'];
     document.getElementById('passModeBtn').classList.toggle('active', mode === 'pass');
     document.getElementById('urlModeBtn').classList.toggle('active', mode === 'url');
-    
-    mainInput.placeholder = (mode === 'pass') ? t.placeholderPass : t.placeholderUrl;
-    
-    mainInput.value = "";
-    resultsGrid.innerHTML = "";
-    safeMessage.classList.add('hidden');
-    generateBtn.classList.remove('hidden');
-    
-    badge.innerText = t.badgeIdle;
-    badge.className = "badge idle";
+    document.getElementById('mainInput').placeholder = (mode === 'pass') ? t.placeholderPass : t.placeholderUrl;
+    document.getElementById('mainInput').value = "";
+    document.getElementById('resultsGrid').innerHTML = "";
+    document.getElementById('safeMessage').classList.add('hidden');
+    document.getElementById('generateBtn').classList.toggle('hidden', mode === 'url');
+    document.getElementById('badge').innerText = t.badgeIdle;
+    document.getElementById('badge').className = "badge idle";
 }
 
-// --- INPUT LISTENER ---
-mainInput.addEventListener('input', () => {
-    if (mainInput.value.length > 0) {
-        generateBtn.classList.add('hidden');
+// --- MODALS (UPDATED TO USE IMAGES) ---
+function openModal(cardKey) {
+    const article = translations[currentLang].articles[cardKey];
+    document.getElementById('modalTitle').textContent = article.title;
+    document.getElementById('modalBody').innerHTML = article.body;
+    // This line now works because we added "img" to the translations object above
+    document.getElementById('modalImg').src = article.img;
+    document.getElementById('modalOverlay').classList.remove('hidden');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.add('hidden'); }
+
+// --- AUTH & SUBSCRIPTIONS ---
+function checkLoginStatus() {
+    const stored = localStorage.getItem('cyberGuardUser');
+    if (stored) {
+        currentUser = JSON.parse(stored);
+        updateAuthUI(true);
+        loadHistory();
     } else {
-        if (currentMode === 'pass') generateBtn.classList.remove('hidden');
+        updateAuthUI(false);
     }
-    runAudit();
-    resetPrivacyTimer();
-});
-
-// --- AUDIT LOGIC ---
-function runAudit() {
-    const val = mainInput.value;
-    const t = translations[currentLang]; 
-    resultsGrid.innerHTML = "";
-    
-    if (!val) {
-        badge.innerText = t.badgeIdle;
-        badge.className = "badge idle";
-        safeMessage.classList.add('hidden');
-        if (currentMode === 'pass') generateBtn.classList.remove('hidden');
-        return;
-    }
-
-    let results = [];
-    let riskLevel = 'safe';
-
-    if (currentMode === 'pass') {
-        if (val.length < 12) {
-            results.push({ title: t.titleLength, msg: t.errLength, type: "danger" });
-            riskLevel = 'danger';
-        }
-        if (!/[A-Z]/.test(val)) {
-            results.push({ title: t.titleComplex, msg: t.errCaps, type: "warning" });
-            if (riskLevel !== 'danger') riskLevel = 'warning';
-        }
-        if (!/[0-9]/.test(val)) {
-            results.push({ title: t.titleNum, msg: t.errNum, type: "warning" });
-        }
-        if (!/[!@#$%^&*]/.test(val)) {
-            results.push({ title: t.titleSym, msg: t.errSym, type: "warning" });
-        }
-    } else {
-        if (!val.startsWith('https')) {
-            results.push({ title: t.titleInsecure, msg: t.errHttps, type: "danger" });
-            riskLevel = 'danger';
-        }
-        if (/\.xyz|\.top|\.live/.test(val)) {
-            results.push({ title: t.titleSuspicious, msg: t.errDomain, type: "warning" });
-            if (riskLevel !== 'danger') riskLevel = 'warning';
-        }
-    }
-
-    if (results.length > 0) {
-        safeMessage.classList.add('hidden');
-        results.forEach(res => {
-            const card = document.createElement('div');
-            card.className = `result-card ${res.type}`;
-            card.innerHTML = `<h3>${res.title}</h3><p>${res.msg}</p>`;
-            resultsGrid.appendChild(card);
-        });
-    } else {
-        safeMessage.classList.remove('hidden');
-        document.getElementById('statusSafeText').innerText = t.badgeSafe;
-        document.getElementById('successMsgText').innerText = t.msgSecure;
-    }
-
-    if(riskLevel === 'safe') badge.innerText = t.badgeSafe;
-    else if(riskLevel === 'warning') badge.innerText = t.badgeWarn;
-    else badge.innerText = t.badgeDanger;
-
-    badge.className = `badge ${riskLevel}`;
 }
 
-// --- GENERATOR ---
-generateBtn.onclick = () => {
+function updateAuthUI(loggedIn) {
+    const profile = document.getElementById('userProfile');
+    const signin = document.getElementById('signInBtn');
+    if (loggedIn) {
+        signin.classList.add('hidden');
+        profile.classList.remove('hidden');
+        document.getElementById('navUserName').textContent = currentUser.name;
+        document.getElementById('menuUserName').textContent = currentUser.name;
+        document.getElementById('menuUserEmail').textContent = currentUser.email;
+        document.getElementById('menuUserTier').textContent = currentUser.tier.toUpperCase();
+        document.getElementById('historySection').classList.remove('hidden');
+        
+        // HIDE UPGRADE BUTTON ONLY FOR ELITE
+        document.getElementById('upgradeBtn').style.display = (currentUser.tier === 'Elite Guard') ? 'none' : 'flex';
+    } else {
+        signin.classList.remove('hidden');
+        profile.classList.add('hidden');
+        document.getElementById('historySection').classList.add('hidden');
+    }
+}
+
+function logout() { localStorage.removeItem('cyberGuardUser'); location.reload(); }
+
+function startAuthProcess() {
+    const email = document.getElementById('authEmail').value;
+    if(!email.includes('@')) return alert("Enter valid email");
+    document.getElementById('authStep1').classList.add('hidden');
+    document.getElementById('authStep2').classList.remove('hidden');
+    setTimeout(() => {
+        document.getElementById('authStep2').classList.add('hidden');
+        document.getElementById('authStep3').classList.remove('hidden');
+        currentUser = { email: email, name: email.split('@')[0], tier: 'Standard Guard' };
+    }, 1500);
+}
+
+function goToPlanSelection() {
+    document.getElementById('authStep3').classList.add('hidden');
+    document.getElementById('authStep4').classList.remove('hidden');
+}
+
+function selectPlan(tier) {
+    currentUser.tier = tier;
+    currentUser.name = currentUser.name.charAt(0).toUpperCase() + currentUser.name.slice(1);
+    localStorage.setItem('cyberGuardUser', JSON.stringify(currentUser));
+    location.reload();
+}
+
+function confirmUpgrade(tier) {
+    currentUser.tier = tier;
+    localStorage.setItem('cyberGuardUser', JSON.stringify(currentUser));
+    updateAuthUI(true);
+    closeSubModal();
+}
+
+// --- SCANNER ENGINE ---
+document.getElementById('generateBtn').onclick = () => {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
     let pass = "";
     const array = new Uint32Array(16);
     window.crypto.getRandomValues(array);
-    for (let i = 0; i < 16; i++) {
-        pass += chars[array[i] % chars.length];
-    }
-    mainInput.value = pass;
-    generateBtn.classList.add('hidden');
+    for (let i = 0; i < 16; i++) pass += chars[array[i] % chars.length];
+    document.getElementById('mainInput').value = pass;
+    document.getElementById('generateBtn').classList.add('hidden');
     runAudit();
     resetPrivacyTimer();
 };
+
+document.getElementById('mainInput').oninput = () => {
+    if (document.getElementById('mainInput').value.length > 0) document.getElementById('generateBtn').classList.add('hidden');
+    runAudit();
+    resetPrivacyTimer();
+};
+
+function runAudit() {
+    const val = document.getElementById('mainInput').value;
+    const t = translations[currentLang];
+    const grid = document.getElementById('resultsGrid');
+    grid.innerHTML = "";
+    if (!val) {
+        document.getElementById('badge').innerText = t.badgeIdle;
+        document.getElementById('badge').className = "badge idle";
+        document.getElementById('safeMessage').classList.add('hidden');
+        return;
+    }
+    let results = [];
+    let risk = 'safe';
+    if (currentMode === 'pass') {
+        if (val.length < 12) { results.push({t:"Too Short", m:"12+ chars needed", s:"danger"}); risk='danger'; }
+    } else {
+        if (!val.startsWith('https')) { results.push({t:"Unsecured", m:"No HTTPS detected", s:"danger"}); risk='danger'; }
+    }
+    if (results.length > 0) {
+        results.forEach(r => {
+            const d = document.createElement('div');
+            d.className = `result-card ${r.s}`;
+            d.innerHTML = `<h3>${r.t}</h3><p>${r.m}</p>`;
+            grid.appendChild(d);
+        });
+    } else {
+        document.getElementById('safeMessage').classList.remove('hidden');
+    }
+    document.getElementById('badge').innerText = t[`badge${risk.charAt(0).toUpperCase() + risk.slice(1)}`];
+    document.getElementById('badge').className = `badge ${risk}`;
+    
+    clearTimeout(historyDebounce);
+    historyDebounce = setTimeout(() => {
+        if(currentUser) saveToHistory(currentMode, val, risk);
+    }, 1000);
+}
+
+function resetPrivacyTimer() {
+    clearTimeout(privacyTimer);
+    if (document.getElementById('mainInput').value !== "") {
+        privacyTimer = setTimeout(() => {
+            document.getElementById('mainInput').value = "";
+            runAudit();
+            document.getElementById('badge').innerText = "TIMEOUT";
+        }, 30000);
+    }
+}
+
+// --- HISTORY & UI HELPERS ---
+function saveToHistory(type, val, risk) {
+    let history = JSON.parse(localStorage.getItem('scanHistory') || "[]");
+    history.unshift({type, val: val.substring(0,3)+"***", risk, time: new Date().toLocaleTimeString()});
+    localStorage.setItem('scanHistory', JSON.stringify(history.slice(0,5)));
+    loadHistory();
+}
+
+function loadHistory() {
+    const history = JSON.parse(localStorage.getItem('scanHistory') || "[]");
+    const body = document.getElementById('historyTableBody');
+    body.innerHTML = history.map(h => `<tr><td>${h.type}</td><td>${h.val}</td><td>${h.risk}</td><td>${h.time}</td></tr>`).join('');
+}
+
+function clearHistory() { localStorage.removeItem('scanHistory'); loadHistory(); }
+
+document.getElementById('profileBtn').onclick = (e) => {
+    e.stopPropagation();
+    document.getElementById('profileMenu').classList.toggle('show');
+};
+window.onclick = () => document.getElementById('profileMenu').classList.remove('show');
+
+function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
+function openSubModal() { document.getElementById('subModalOverlay').classList.remove('hidden'); }
+function closeSubModal() { document.getElementById('subModalOverlay').classList.add('hidden'); }
+
+window.onload = () => {
+    checkLoginStatus();
+    lucide.createIcons();
+};
+
+// --- FIXED THEME TOGGLE (Swaps Icon) ---
+document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    
+    // Check if dark mode is active
+    const isDark = document.body.classList.contains('dark-mode');
+    
+    // Get the icon element
+    const themeIcon = document.getElementById('themeIcon');
+    
+    // Swap icon: sun if dark mode, moon if light mode
+    themeIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+    
+    // Re-render the icon
+    lucide.createIcons();
+});
+

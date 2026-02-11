@@ -172,6 +172,8 @@ const reportData = {
     }
 };
 
+
+
 // --- MODAL LOGIC ---
 const modal = document.getElementById('analysisModal');
 const modalImg = document.getElementById('modalImg');
@@ -239,3 +241,5 @@ document.addEventListener('keydown', (e) => {
         closeModal();
     }
 });
+
+

@@ -7,7 +7,6 @@
 
 /* Bio Card */
 .bio-section { margin-bottom: 5rem; }
-
 .bio-card {
     background: var(--card-bg);
     border-radius: 1.5rem;
@@ -25,22 +24,19 @@
     border-bottom: 1px solid var(--border);
 }
 
-.profile-pic-placeholder {
+/* CHANGED: Profile Picture Styles */
+.profile-pic {
     width: 100px;
     height: 100px;
-    background: var(--bg);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
+    object-fit: cover;
     border: 2px solid var(--border);
-    color: var(--text);
+    background: var(--bg);
+    display: block;
 }
 
 .bio-intro h1 { margin: 0; font-size: 2rem; font-weight: 900; }
 .subtitle { margin: 0.5rem 0 0; opacity: 0.6; font-weight: 500; font-size: 1.1rem; }
-
 .bio-content p { font-size: 1.1rem; opacity: 0.8; line-height: 1.7; margin-bottom: 1.5rem; }
 
 .bio-stats { display: flex; gap: 2rem; margin-top: 2rem; }
@@ -50,63 +46,72 @@
     background: var(--bg); padding: 0.5rem 1rem; border-radius: 20px;
 }
 
-/* Presentation Section */
-.presentation-section .section-header { margin-bottom: 2rem; text-align: left; }
-
-.ppt-container {
-    position: relative;
-    width: 100%;
-    /* 16:9 Aspect Ratio hack */
-    padding-bottom: 56.25%; 
-    height: 0;
-    background: #000;
-    border-radius: 1rem;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    border: 1px solid var(--border);
-}
-
-.ppt-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.download-container {
+/* --- NEW FEATURES SECTION --- */
+.features-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
     margin-top: 2rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
-
-/* Mobile Adjustments for About Page */
-@media (max-width: 768px) {
-    .bio-header { flex-direction: column; text-align: center; gap: 1rem; }
-    .bio-stats { justify-content: center; flex-wrap: wrap; }
-}
-
-/* --- PDF SECTION STYLES --- */
-.pdf-section {
     margin-bottom: 5rem;
 }
 
-.pdf-container {
-    width: 100%;
-    height: 600px; /* Fixed height for the viewer */
-    background: #333; /* Dark background for contrast */
+.feature-card {
+    background: var(--card-bg);
+    padding: 2rem;
     border-radius: 1rem;
+    border: 1px solid var(--border);
+    transition: transform 0.3s ease;
+    text-align: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    border-color: #d97706; /* Gold for Elite */
+}
+
+.feature-card i {
+    width: 48px; height: 48px;
+    margin-bottom: 1rem; color: var(--text);
+}
+
+.feature-card h3 { font-weight: 800; margin-bottom: 0.5rem; }
+.feature-card p { opacity: 0.7; font-size: 0.95rem; }
+
+/* --- PDF SECTION STYLES --- */
+.pdf-section { margin-bottom: 5rem; }
+.pdf-container {
+    width: 100%; height: 600px;
+    background: #333; border-radius: 1rem;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     border: 1px solid var(--border);
 }
 
-/* Mobile: Make it shorter on phones so it doesn't take up the whole screen */
 @media (max-width: 768px) {
-    .pdf-container {
-        height: 400px;
+    .bio-header { flex-direction: column; text-align: center; gap: 1rem; }
+    .bio-stats { justify-content: center; flex-wrap: wrap; }
+    .pdf-container { height: 400px; }
+}
+
+/* --- RESPONSIVE INFO --- */
+@media (max-width: 768px) {
+    /* Stack Bio Section */
+    .bio-header { 
+        flex-direction: column; 
+        text-align: center; 
+        gap: 1.5rem;
+    }
+    
+    .bio-stats { 
+        justify-content: center; 
+        flex-wrap: wrap; 
+    }
+    
+    /* Adjust PDF Viewer Height for Mobile */
+    .pdf-container { height: 400px; }
+    
+    /* Features Grid */
+    .features-container {
+        grid-template-columns: 1fr;
     }
 }

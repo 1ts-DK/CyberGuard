@@ -1,0 +1,162 @@
+        /* --- API PAGE SPECIFIC STYLES (Extending Index Theme) --- */
+        
+        /* Layout Grid */
+        .api-container { 
+            display: flex; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            min-height: 100vh;
+            gap: 2rem;
+            position: relative;
+        }
+
+        /* Sidebar Navigation */
+        .api-sidebar { 
+            width: 280px; 
+            padding: 2rem 1rem; 
+            position: sticky; 
+            top: 80px; /* Below the glass navbar */
+            height: calc(100vh - 80px); 
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+            /* Hide scrollbar for cleaner look */
+            scrollbar-width: none; 
+        }
+        .api-sidebar::-webkit-scrollbar { display: none; }
+
+        /* Search Box styling to match Index inputs */
+        .search-box { position: relative; margin-bottom: 2rem; }
+        .search-input { 
+            width: 100%; padding: 0.8rem 1rem 0.8rem 2.5rem; 
+            border-radius: 0.8rem; border: 1px solid var(--border); 
+            background: var(--card-bg); color: var(--text); 
+            font-family: inherit; font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: var(--transition);
+        }
+        .search-input:focus { outline: none; border-color: var(--accent); }
+        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 16px; opacity: 0.5; }
+        .shortcut-badge { 
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+            font-size: 0.7rem; padding: 2px 6px; border: 1px solid var(--border); 
+            border-radius: 4px; opacity: 0.6; 
+        }
+
+        /* Sidebar Links */
+        .api-nav-group { margin-bottom: 2rem; }
+        .api-nav-title { 
+            font-size: 0.75rem; font-weight: 800; text-transform: uppercase; 
+            letter-spacing: 1px; opacity: 0.5; margin-bottom: 0.8rem; display: block; 
+        }
+        .api-nav-link { 
+            display: block; padding: 0.6rem 0.8rem; 
+            text-decoration: none; color: var(--text); opacity: 0.7; 
+            font-weight: 500; font-size: 0.95rem; border-radius: 0.5rem; 
+            transition: var(--transition); 
+        }
+        .api-nav-link:hover { background: rgba(0,0,0,0.05); opacity: 1; }
+        .api-nav-link.active { 
+            background: var(--accent); color: var(--accent-text); 
+            opacity: 1; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.15); 
+        }
+
+        /* Main Content Area */
+        .api-content { flex: 1; padding: 4rem 2rem; max-width: 900px; }
+        
+        .api-header h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 1rem; line-height: 1; }
+        .api-header p { font-size: 1.2rem; opacity: 0.7; max-width: 600px; line-height: 1.6; }
+
+        /* Endpoint Cards (Matches Info Cards from Index) */
+        .endpoint-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 1.5rem; padding: 2.5rem; margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .endpoint-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        
+        /* Method Badges */
+        .method { padding: 0.4rem 1rem; border-radius: 0.5rem; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; }
+        .post { background: #dbeafe; color: #1e40af; } /* Blueish for POST */
+        .get { background: #dcfce7; color: #166534; }  /* Greenish for GET */
+        
+        .dark-mode .post { background: rgba(30, 64, 175, 0.3); color: #93c5fd; }
+        .dark-mode .get { background: rgba(22, 101, 52, 0.3); color: #86efac; }
+
+        .url-path { font-family: 'Fira Code', monospace; font-size: 1.1rem; font-weight: 600; }
+
+        /* Code Blocks */
+        .code-wrapper { position: relative; margin: 1.5rem 0; }
+        pre { 
+            background: #1e1e1e; color: #f8f8f2; padding: 1.5rem; 
+            border-radius: 1rem; overflow-x: auto; font-family: monospace; 
+            font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1); 
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .copy-btn {
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(255,255,255,0.1); border: none; color: white;
+            padding: 6px; border-radius: 6px; cursor: pointer; transition: 0.2s;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+
+        /* Interactive Console (Matches Scanner Section from Index) */
+        .console-trigger {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            margin-top: 1rem; font-weight: 700; color: var(--accent);
+            cursor: pointer; font-size: 0.9rem; opacity: 0.8;
+        }
+        .console-trigger:hover { opacity: 1; }
+
+        .console-box {
+            margin-top: 1rem; padding: 1.5rem; border-radius: 1rem;
+            background: var(--bg); border: 1px solid var(--border);
+            display: none; animation: slideDown 0.3s ease;
+        }
+        .console-box.open { display: block; }
+
+        .console-input { 
+            width: 100%; padding: 0.8rem; margin-bottom: 1rem;
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 0.5rem; color: var(--text);
+        }
+        .run-btn {
+            background: var(--accent); color: var(--accent-text);
+            border: none; padding: 0.6rem 1.2rem; border-radius: 2rem;
+            font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .run-btn:hover { transform: translateY(-2px); }
+
+        /* Tables (Status Codes & Pricing) */
+        .api-table { 
+            width: 100%; border-collapse: separate; border-spacing: 0; 
+            margin: 2rem 0; border: 1px solid var(--border); border-radius: 1rem; overflow: hidden; 
+            background: var(--card-bg);
+        }
+        .api-table th { 
+            background: var(--bg); text-align: left; padding: 1rem; 
+            font-size: 0.8rem; text-transform: uppercase; font-weight: 800; opacity: 0.6; 
+            border-bottom: 1px solid var(--border); 
+        }
+        .api-table td { padding: 1rem; border-bottom: 1px solid var(--border); font-weight: 500; font-size: 0.95rem; }
+        .api-table tr:last-child td { border-bottom: none; }
+
+        /* Pricing Toggle */
+        .toggle-wrapper { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; font-weight: 700; font-size: 0.9rem; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--text); } /* Uses theme text color (black/white) */
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            .api-container { flex-direction: column; padding: 0; }
+            .api-sidebar { width: 100%; height: auto; position: static; border-right: none; padding: 1rem; border-bottom: 1px solid var(--border); }
+            .api-content { padding: 2rem 1rem; }
+        }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
